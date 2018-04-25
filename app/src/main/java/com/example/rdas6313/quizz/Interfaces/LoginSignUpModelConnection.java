@@ -10,4 +10,5 @@ public interface LoginSignUpModelConnection {
     public void signUpUser(String email, String password, String name, Activity activity,LoginSignUpModelCallback callback);
     public boolean isUserLoggedIn();
     public void signOutUser();
+    public void loginUser(String email,String password,Activity activity,LoginSignUpModelCallback callback);
 }

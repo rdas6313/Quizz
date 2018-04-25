@@ -6,4 +6,5 @@ package com.example.rdas6313.quizz.Interfaces;
 
 public interface PresenterCallBack {
     public void onSignUpResponse(boolean isError,String msg);
+    public void onLoginResponse(boolean isError,String msg);
 }

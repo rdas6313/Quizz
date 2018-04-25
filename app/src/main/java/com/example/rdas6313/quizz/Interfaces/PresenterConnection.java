@@ -10,4 +10,5 @@ public interface PresenterConnection {
     public boolean isUserAlreadyLoggedIn();
     public void signUpUser(String email, String password, String name, Activity activity);
     public void signOutUser();
+    public void loginUser(String email,String password,Activity activity);
 }

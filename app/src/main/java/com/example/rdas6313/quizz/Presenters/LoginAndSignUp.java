@@ -45,6 +45,19 @@ public class LoginAndSignUp implements PresenterConnection,LoginSignUpModelCallb
     }
 
     @Override
+    public void loginRespose(boolean isError, String msg) {
+        if(callBack != null)
+            callBack.onLoginResponse(isError,msg);
+    }
+
+    @Override
+    public void loginUser(String email, String password, Activity activity) {
+        callBack = (PresenterCallBack)activity;
+        if(connection != null)
+            connection.loginUser(email,password,activity,this);
+    }
+
+    @Override
     public void signUpResponse(boolean isError, String msg) {
         if(callBack != null)
             callBack.onSignUpResponse(isError,msg);

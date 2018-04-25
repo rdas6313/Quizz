@@ -6,4 +6,5 @@ package com.example.rdas6313.quizz.Interfaces;
 
 public interface LoginSignUpModelCallback {
     public void signUpResponse(boolean isError,String msg);
+    public void loginRespose(boolean isError,String msg);
 }

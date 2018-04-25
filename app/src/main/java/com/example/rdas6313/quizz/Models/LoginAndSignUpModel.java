@@ -27,6 +27,29 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
     }
 
     @Override
+    public void loginUser(String email, String password, Activity activity, final LoginSignUpModelCallback callback) {
+        if(mAuth == null && callback != null){
+            callback.loginRespose(true,"Internal Error! login Failed");
+            return;
+        }
+        mAuth.signInWithEmailAndPassword(email,password)
+                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            if(callback != null)
+                                callback.loginRespose(false,"Welcome");
+                        }else{
+                            String msg = task.getException().getMessage();
+                            Log.e(TAG,msg);
+                            if(callback != null)
+                                callback.loginRespose(true,msg);
+                        }
+                    }
+                });
+    }
+
+    @Override
     public void signUpUser(String email, String password, final String name, final Activity activity, final LoginSignUpModelCallback callback) {
         if(mAuth == null){
             callback.signUpResponse(true,"Internal Error ! Sign up Failed");
@@ -43,7 +66,13 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
                             user.updateProfile(profileChangeRequest).addOnCompleteListener(activity, new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    callback.signUpResponse(false,"Sign Up Successfully");
+                                    if(task.isSuccessful())
+                                        callback.signUpResponse(false,"Sign Up Successfully");
+                                    else {
+                                        String msg = task.getException().getMessage();
+                                        Log.e(TAG,msg);
+                                        callback.signUpResponse(true,msg);
+                                    }
                                 }
                             });
                         }else{
