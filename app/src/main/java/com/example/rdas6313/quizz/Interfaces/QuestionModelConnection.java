@@ -1,5 +1,6 @@
 package com.example.rdas6313.quizz.Interfaces;
 
+import com.example.rdas6313.quizz.Models.Questions;
 import com.example.rdas6313.quizz.Models.Questiontype;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
@@ -9,4 +10,5 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 public interface QuestionModelConnection {
     public FirebaseRecyclerOptions<Questiontype> getFirebaseOptionsForQuestionSet();
+    public FirebaseRecyclerOptions<Questions> getFirebaseOptionsForQuestions(String question_set_key);
 }

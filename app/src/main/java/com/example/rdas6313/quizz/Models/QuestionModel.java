@@ -16,6 +16,25 @@ import com.google.firebase.database.Query;
 public class QuestionModel implements QuestionModelConnection {
 
     @Override
+    public FirebaseRecyclerOptions<Questions> getFirebaseOptionsForQuestions(String question_set_Key) {
+        Query query = FirebaseDatabase.getInstance().getReference().child("questions").orderByChild("type").equalTo(question_set_Key);
+        FirebaseRecyclerOptions<Questions> moptions = new FirebaseRecyclerOptions.Builder<Questions>()
+                .setQuery(query, new SnapshotParser<Questions>() {
+                    @NonNull
+                    @Override
+                    public Questions parseSnapshot(@NonNull DataSnapshot snapshot) {
+                        // Log.e(TAG,snapshot.getKey()+" "+snapshot.getValue());
+                        Questions questions = snapshot.getValue(Questions.class);
+                        questions.setId(snapshot.getKey());
+                        // Log.e(TAG,questions.getQuestion()+" "+questions.getOptions() +" "+questions.getId());
+                        return questions;
+                    }
+
+                }).build();
+        return moptions;
+    }
+
+    @Override
     public FirebaseRecyclerOptions<Questiontype> getFirebaseOptionsForQuestionSet() {
         Query query = FirebaseDatabase.getInstance().getReference().child("questionset");
         FirebaseRecyclerOptions<Questiontype> options = new FirebaseRecyclerOptions.Builder<Questiontype>()

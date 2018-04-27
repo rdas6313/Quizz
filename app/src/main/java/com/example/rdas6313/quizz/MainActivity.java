@@ -17,6 +17,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.rdas6313.quizz.Fragments.QuestionSetFragment;
+import com.example.rdas6313.quizz.Fragments.QuestionsFragment;
+import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
 import com.example.rdas6313.quizz.Interfaces.PresenterCallBack;
 import com.example.rdas6313.quizz.Interfaces.PresenterConnection;
 import com.example.rdas6313.quizz.Presenters.LoginAndSignUp;
@@ -27,17 +29,21 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements FragmentCallbacks{
     private final String TAG = MainActivity.class.getName();
     private PresenterConnection mConnection;
     private QuestionSetFragment questionSetFragment;
     private final String QUESTION_SET_FRAGMENT = "question_set_fragment";
+    private QuestionsFragment questionsFragment;
+    private final String QUESTION_FRAGMENT = "question_fragment";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mConnection = new LoginAndSignUp();
         questionSetFragment = new QuestionSetFragment();
+        questionsFragment = new QuestionsFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,questionSetFragment,QUESTION_SET_FRAGMENT)
                 .commit();
 
@@ -85,5 +91,12 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-
+    @Override
+    public void fragmentCallback(String key) {
+        Bundle bundle = new Bundle();
+        bundle.putString(getString(R.string.QUESTION_SET_KEY),key);
+        questionsFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,questionsFragment,QUESTION_FRAGMENT)
+                .commit();
+    }
 }

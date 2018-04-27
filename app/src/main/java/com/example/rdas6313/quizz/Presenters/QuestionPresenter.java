@@ -3,6 +3,7 @@ package com.example.rdas6313.quizz.Presenters;
 import com.example.rdas6313.quizz.Interfaces.QuestionModelConnection;
 import com.example.rdas6313.quizz.Interfaces.QuestionPresenterConnection;
 import com.example.rdas6313.quizz.Models.QuestionModel;
+import com.example.rdas6313.quizz.Models.Questions;
 import com.example.rdas6313.quizz.Models.Questiontype;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
@@ -17,6 +18,14 @@ public class QuestionPresenter implements QuestionPresenterConnection {
     public QuestionPresenter(){
         modelConnection = new QuestionModel();
     }
+
+    @Override
+    public FirebaseRecyclerOptions<Questions> getDataForQuestions(String key) {
+        if(modelConnection != null)
+            return modelConnection.getFirebaseOptionsForQuestions(key);
+        return null;
+    }
+
     @Override
     public FirebaseRecyclerOptions<Questiontype> getDataForQuestionSet() {
         if(modelConnection != null)

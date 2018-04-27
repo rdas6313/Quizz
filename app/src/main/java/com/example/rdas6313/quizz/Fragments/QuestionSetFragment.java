@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +14,13 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
 import com.example.rdas6313.quizz.Interfaces.QuestionPresenterConnection;
 import com.example.rdas6313.quizz.Models.Questiontype;
 import com.example.rdas6313.quizz.Presenters.QuestionPresenter;
 import com.example.rdas6313.quizz.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +35,7 @@ public class QuestionSetFragment extends Fragment {
     private QuestionPresenterConnection questionPresenterConnection = null;
     private ProgressBar progressBar;
     private boolean isStopProgressBar = false;
+    private FragmentCallbacks fragmentCallbacks;
 
     public QuestionSetFragment() {
         // Required empty public constructor
@@ -50,15 +47,14 @@ public class QuestionSetFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_question_set, container, false);
         recyclerView = (RecyclerView)root.findViewById(R.id.recylerView);
-        recyclerView.setVisibility(View.GONE);
         progressBar = (ProgressBar)root.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
         return root;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        fragmentCallbacks = (FragmentCallbacks) getContext();
         questionPresenterConnection = new QuestionPresenter();
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -78,22 +74,19 @@ public class QuestionSetFragment extends Fragment {
                 QuestionTypeViewHolder vh = new QuestionTypeViewHolder(root);
                 return vh;
             }
-        };
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
 
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                //Log.e(TAG,"Calling On Insert "+itemCount);
-                checkIfEmpty();
+            public void onDataChanged() {
+                super.onDataChanged();
+                if(adapter.getItemCount()>0)
+                    flipView(false);
             }
-
-        });
+        };
         recyclerView.setAdapter(adapter);
     }
 
-    private void checkIfEmpty(){
-        if(adapter.getItemCount()>0){
+    private void flipView(boolean showProgressBar){
+        if(!showProgressBar){
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }else{
@@ -105,21 +98,25 @@ public class QuestionSetFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        adapter.startListening();
+        if(adapter != null)
+            adapter.startListening();
+        flipView(true);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        adapter.stopListening();
+        if(adapter != null)
+            adapter.stopListening();
     }
 
-    private class QuestionTypeViewHolder extends RecyclerView.ViewHolder{
+    private class QuestionTypeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView questionType;
         private ImageButton doneBtn;
 
         public QuestionTypeViewHolder(View root){
             super(root);
+            root.setOnClickListener(this);
             questionType = (TextView)root.findViewById(R.id.questiontype);
             doneBtn = (ImageButton)root.findViewById(R.id.done);
         }
@@ -129,6 +126,14 @@ public class QuestionSetFragment extends Fragment {
             else
                 doneBtn.setVisibility(View.GONE);
             questionType.setText(q_type);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Questiontype questiontype = adapter.getItem(getAdapterPosition());
+            if(questiontype == null)
+                return;
+            fragmentCallbacks.fragmentCallback(questiontype.getId());
         }
     }
 }
