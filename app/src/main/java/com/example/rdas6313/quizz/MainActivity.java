@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.rdas6313.quizz.Fragments.QuestionSetFragment;
 import com.example.rdas6313.quizz.Fragments.QuestionsFragment;
+import com.example.rdas6313.quizz.Fragments.ScoreBoardFragment;
 import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
 import com.example.rdas6313.quizz.Interfaces.PresenterCallBack;
 import com.example.rdas6313.quizz.Interfaces.PresenterConnection;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
     private final String QUESTION_SET_FRAGMENT = "question_set_fragment";
     private QuestionsFragment questionsFragment;
     private final String QUESTION_FRAGMENT = "question_fragment";
+    private ScoreBoardFragment scoreBoardFragment;
+    private final String SCORE_BOARD_FRAGMENT = "score_board_fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
         mConnection = new LoginAndSignUp();
         questionSetFragment = new QuestionSetFragment();
         questionsFragment = new QuestionsFragment();
+        scoreBoardFragment = new ScoreBoardFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,questionSetFragment,QUESTION_SET_FRAGMENT)
                 .commit();
 
@@ -92,11 +96,17 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
 
 
     @Override
-    public void fragmentCallback(String key) {
+    public void QuestionSetFragmentCallbacks(String key) {
         Bundle bundle = new Bundle();
         bundle.putString(getString(R.string.QUESTION_SET_KEY),key);
         questionsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,questionsFragment,QUESTION_FRAGMENT)
+                .commit();
+    }
+
+    @Override
+    public void QuestionFrgmentCallbacks(int total_question, int right_ans) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,scoreBoardFragment,SCORE_BOARD_FRAGMENT)
                 .commit();
     }
 }

@@ -2,6 +2,7 @@ package com.example.rdas6313.quizz.Fragments;
 
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,13 +10,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
 import com.example.rdas6313.quizz.Interfaces.QuestionPresenterConnection;
 import com.example.rdas6313.quizz.Models.Questions;
 import com.example.rdas6313.quizz.Models.Questiontype;
@@ -33,17 +40,32 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QuestionsFragment extends Fragment {
+public class QuestionsFragment extends Fragment implements View.OnClickListener{
 
     private final String TAG = QuestionSetFragment.class.getName();
+    private final int SHOW_START_BTN = 1;
+    private final int SHOW_QUESTION = 2;
+    private boolean alreadyShowingBtn = false;
     private RecyclerView recyclerView;
+    private LinearLayout containerView;
+    private Button startBtn;
     private ProgressBar progressBar;
+    private TextView timerView;
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseRecyclerAdapter<Questions,MyViewHolder>adapter;
     private QuestionPresenterConnection questionPresenterConnection;
+    private CountDownTimer timer;
+    private final int TOTAL_TIME_IN_MIN = 1;
+    private FragmentCallbacks fragmentCallbacks;
+    private boolean alreadyFinished = false;
+    private boolean alreadyStartedQuizz = false;
 
     public QuestionsFragment() {}
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +73,10 @@ public class QuestionsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_questions, container, false);
         recyclerView = (RecyclerView)root.findViewById(R.id.recylerView);
         progressBar = (ProgressBar)root.findViewById(R.id.progressBar);
+        timerView = (TextView)root.findViewById(R.id.timerView);
+        containerView = (LinearLayout)root.findViewById(R.id.quizzContainer);
+        startBtn = (Button)root.findViewById(R.id.startButton);
+        startBtn.setOnClickListener(this);
         return root;
     }
 
@@ -62,6 +88,7 @@ public class QuestionsFragment extends Fragment {
         if(bundle != null)
             questionSetKey = bundle.getString(getString(R.string.QUESTION_SET_KEY));
 
+        fragmentCallbacks = (FragmentCallbacks)getActivity();
         Log.e(TAG,"QUESTION_KEY "+questionSetKey);
         questionPresenterConnection = new QuestionPresenter();
         layoutManager = new LinearLayoutManager(getContext());
@@ -88,22 +115,75 @@ public class QuestionsFragment extends Fragment {
             @Override
             public void onDataChanged() {
                 super.onDataChanged();
-                if(adapter.getItemCount()>0)
-                    flipView(false);
+                if(adapter.getItemCount()>0 && !alreadyShowingBtn) {
+                    Log.e(TAG, "Data Changed");
+                    changeView(SHOW_START_BTN);
+                    alreadyShowingBtn = true;
+                }
 
             }
+
         };
         recyclerView.setAdapter(adapter);
     }
 
-    private void flipView(boolean showProgressBar){
-        if(showProgressBar){
-            progressBar.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        }else{
-            progressBar.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+    private void changeView(int view_type){
+        switch (view_type){
+            case 1:
+                progressBar.setVisibility(View.GONE);
+                startBtn.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                startBtn.setVisibility(View.GONE);
+                containerView.setVisibility(View.VISIBLE);
+                break;
         }
+    }
+
+    private void changeTimerView(long millis){
+        long sec = (millis/1000);
+        long min = (sec/60);
+        long hours = (min/60);
+        timerView.setText(getString(R.string.timer,hours+"",min+"",sec+""));
+    }
+
+    private void startTimer(){
+        long totalTimeInMillis = TOTAL_TIME_IN_MIN*60*1000;
+        long intervalInMillis = 1000;
+        changeTimerView(totalTimeInMillis);
+        timer = new CountDownTimer(totalTimeInMillis,intervalInMillis){
+            @Override
+            public void onFinish() {
+                changeTimerView(0);
+                finishedQuizz();
+            }
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                changeTimerView(millisUntilFinished);
+            }
+        }.start();
+    }
+
+    private void stopTimer(){
+        if(timer != null)
+            timer.cancel();
+    }
+
+    private void finishedQuizz(){
+        stopTimer();
+        if(fragmentCallbacks != null)
+            fragmentCallbacks.QuestionFrgmentCallbacks(adapter.getItemCount(),1);
+        alreadyFinished = true;
+
+    }
+
+    private void startQuizz(){
+        alreadyStartedQuizz = true;
+        changeView(SHOW_QUESTION);
+        startTimer();
+        setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -111,7 +191,7 @@ public class QuestionsFragment extends Fragment {
         super.onResume();
         if(adapter != null)
             adapter.startListening();
-        flipView(true);
+
     }
 
     @Override
@@ -119,6 +199,17 @@ public class QuestionsFragment extends Fragment {
         super.onPause();
         if(adapter != null)
             adapter.stopListening();
+        if(!alreadyFinished && alreadyStartedQuizz)
+            finishedQuizz();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.startButton:
+                startQuizz();
+                break;
+        }
     }
 
     private class MyViewHolder extends RecyclerView.ViewHolder{
@@ -141,6 +232,29 @@ public class QuestionsFragment extends Fragment {
             r1.setText(options.get(0));
             r2.setText(options.get(1));
             r3.setText(options.get(2));
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.question_menu_layout,menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem item = menu.findItem(R.id.logout);
+        item.setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.doneQuizz:
+                finishedQuizz();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

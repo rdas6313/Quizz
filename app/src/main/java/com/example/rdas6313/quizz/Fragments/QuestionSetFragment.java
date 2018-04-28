@@ -133,7 +133,7 @@ public class QuestionSetFragment extends Fragment {
             Questiontype questiontype = adapter.getItem(getAdapterPosition());
             if(questiontype == null)
                 return;
-            fragmentCallbacks.fragmentCallback(questiontype.getId());
+            fragmentCallbacks.QuestionSetFragmentCallbacks(questiontype.getId());
         }
     }
 }

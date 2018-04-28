@@ -5,5 +5,6 @@ package com.example.rdas6313.quizz.Interfaces;
  */
 
 public interface FragmentCallbacks {
-    public void fragmentCallback(String key);
+    public void QuestionSetFragmentCallbacks(String key);
+    public void QuestionFrgmentCallbacks(int total_question,int right_ans);
 }
