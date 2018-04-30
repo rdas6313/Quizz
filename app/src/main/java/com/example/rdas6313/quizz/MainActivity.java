@@ -33,11 +33,11 @@ import com.google.firebase.database.Query;
 public class MainActivity extends AppCompatActivity implements FragmentCallbacks{
     private final String TAG = MainActivity.class.getName();
     private PresenterConnection mConnection;
-    private QuestionSetFragment questionSetFragment;
+  //  private QuestionSetFragment questionSetFragment;
     private final String QUESTION_SET_FRAGMENT = "question_set_fragment";
-    private QuestionsFragment questionsFragment;
+   // private QuestionsFragment questionsFragment;
     private final String QUESTION_FRAGMENT = "question_fragment";
-    private ScoreBoardFragment scoreBoardFragment;
+   // private ScoreBoardFragment scoreBoardFragment;
     private final String SCORE_BOARD_FRAGMENT = "score_board_fragment";
 
     @Override
@@ -45,9 +45,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mConnection = new LoginAndSignUp();
-        questionSetFragment = new QuestionSetFragment();
-        questionsFragment = new QuestionsFragment();
-        scoreBoardFragment = new ScoreBoardFragment();
+        QuestionSetFragment questionSetFragment = new QuestionSetFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,questionSetFragment,QUESTION_SET_FRAGMENT)
                 .commit();
 
@@ -99,14 +97,28 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
     public void QuestionSetFragmentCallbacks(String key) {
         Bundle bundle = new Bundle();
         bundle.putString(getString(R.string.QUESTION_SET_KEY),key);
+        QuestionsFragment questionsFragment = new QuestionsFragment();
         questionsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,questionsFragment,QUESTION_FRAGMENT)
                 .commit();
     }
 
     @Override
-    public void QuestionFrgmentCallbacks(int total_question, int right_ans) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,scoreBoardFragment,SCORE_BOARD_FRAGMENT)
+    public void ScoreBoardFragmentCallback() {
+        QuestionSetFragment questionSetFragment = new QuestionSetFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container,questionSetFragment,QUESTION_SET_FRAGMENT)
                 .commit();
+    }
+
+    @Override
+    public void QuestionFrgmentCallbacks(int total_question, int right_ans) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(getString(R.string.total_question),total_question);
+        bundle.putInt(getString(R.string.right_ans),right_ans);
+        ScoreBoardFragment scoreBoardFragment = new ScoreBoardFragment();
+        scoreBoardFragment.setArguments(bundle);
+       getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,scoreBoardFragment,SCORE_BOARD_FRAGMENT)
+               .commit();
     }
 }

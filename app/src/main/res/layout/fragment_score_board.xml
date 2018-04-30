@@ -1,13 +1,51 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.rdas6313.quizz.Fragments.ScoreBoardFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="Score Board"
+        android:textSize="24sp"
+        android:padding="16dp"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:textStyle="bold"/>
+   <TextView
+       android:id="@+id/total_score"
+       android:layout_margin="16dp"
+       android:layout_gravity="center"
+       android:textAppearance="@style/TextAppearance.AppCompat.Large"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:padding="16dp"
+       tools:text="Total question 20"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/right_ans"
+        android:layout_margin="4dp"
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        tools:text="Right Ans 12"/>
+
+    <Button
+        android:id="@+id/okBtn"
+        android:textColor="@android:color/white"
+        android:background="@color/colorAccent"
+        android:layout_margin="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ok"
+        android:padding="16dp"
+        android:textSize="20sp"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

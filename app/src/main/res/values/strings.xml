@@ -6,4 +6,8 @@
     <string name="QUESTION_SET_KEY">q_key</string>
     <string name="doneQuizz">Done</string>
     <string name="timer">%1$s:%2$s:%3$s</string>
+    <string name="total_question">TOTAL_QUESTIONS</string>
+    <string name="right_ans">RIGHT_ANS</string>
+    <string name="set_total_question">Total Question %1$d</string>
+    <string name="set_right_ans">Right Answer %1$d</string>
 </resources>

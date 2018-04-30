@@ -3,6 +3,7 @@ package com.example.rdas6313.quizz.Fragments;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
 import com.example.rdas6313.quizz.Interfaces.QuestionPresenterConnection;
@@ -32,6 +34,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
@@ -59,6 +62,8 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
     private FragmentCallbacks fragmentCallbacks;
     private boolean alreadyFinished = false;
     private boolean alreadyStartedQuizz = false;
+    private int rightAns;
+
 
     public QuestionsFragment() {}
 
@@ -87,7 +92,10 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
         Bundle bundle = getArguments();
         if(bundle != null)
             questionSetKey = bundle.getString(getString(R.string.QUESTION_SET_KEY));
+        else
+            return;
 
+        rightAns = 0;
         fragmentCallbacks = (FragmentCallbacks)getActivity();
         Log.e(TAG,"QUESTION_KEY "+questionSetKey);
         questionPresenterConnection = new QuestionPresenter();
@@ -110,6 +118,13 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
                 View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_layout,parent,false);
                 MyViewHolder vh = new MyViewHolder(root);
                 return vh;
+            }
+
+            @Override
+            public void onError(@NonNull DatabaseError error) {
+                super.onError(error);
+                Log.e(TAG,error.getMessage());
+
             }
 
             @Override
@@ -137,6 +152,11 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
                 startBtn.setVisibility(View.GONE);
                 containerView.setVisibility(View.VISIBLE);
                 break;
+            default:
+                progressBar.setVisibility(View.GONE);
+                startBtn.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                Toast.makeText(getContext(),"Error",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -171,9 +191,10 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
     }
 
     private void finishedQuizz(){
+        Log.e(TAG,"Right Ans "+rightAns);
         stopTimer();
         if(fragmentCallbacks != null)
-            fragmentCallbacks.QuestionFrgmentCallbacks(adapter.getItemCount(),1);
+            fragmentCallbacks.QuestionFrgmentCallbacks(adapter.getItemCount(),rightAns);
         alreadyFinished = true;
 
     }
@@ -212,7 +233,7 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    private class MyViewHolder extends RecyclerView.ViewHolder{
+    private class MyViewHolder extends RecyclerView.ViewHolder implements RadioGroup.OnCheckedChangeListener{
         private TextView questionView;
         private RadioButton r1,r2,r3;
         private RadioGroup radioGroup;
@@ -221,6 +242,7 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
             super(root);
             questionView = (TextView)root.findViewById(R.id.question);
             radioGroup = (RadioGroup)root.findViewById(R.id.optionGroup);
+            radioGroup.setOnCheckedChangeListener(this);
             r1 = (RadioButton)root.findViewById(R.id.option1);
             r2 = (RadioButton)root.findViewById(R.id.option2);
             r3 = (RadioButton)root.findViewById(R.id.option3);
@@ -230,8 +252,24 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
             if(options == null)
                 return;
             r1.setText(options.get(0));
+            r1.setTag(0);
             r2.setText(options.get(1));
+            r2.setTag(1);
             r3.setText(options.get(2));
+            r3.setTag(2);
+        }
+
+        @Override
+        public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+            RadioButton r = group.findViewById(checkedId);
+            Questions questions = adapter.getItem(getAdapterPosition());
+            if((int)r.getTag() == questions.getAns()){
+                rightAns++;
+                radioGroup.setTag(true);
+            }else{
+                if(radioGroup.getTag() != null)
+                    rightAns--;
+            }
         }
     }
 
