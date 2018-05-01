@@ -124,7 +124,8 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
             public void onError(@NonNull DatabaseError error) {
                 super.onError(error);
                 Log.e(TAG,error.getMessage());
-
+                changeView(4);
+                Toast.makeText(getContext(),error.getMessage(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -134,6 +135,9 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
                     Log.e(TAG, "Data Changed");
                     changeView(SHOW_START_BTN);
                     alreadyShowingBtn = true;
+                }else if(adapter.getItemCount() == 0){
+                    changeView(4);
+                    Toast.makeText(getContext(),"Question Set Empty", Toast.LENGTH_LONG).show();
                 }
 
             }

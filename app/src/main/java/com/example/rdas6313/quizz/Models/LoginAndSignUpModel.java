@@ -50,6 +50,17 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
     }
 
     @Override
+    public String getCurrentUserId() {
+        FirebaseUser currentUser = null;
+        if(mAuth != null){
+            currentUser = mAuth.getCurrentUser();
+        }
+        if(currentUser != null)
+            return currentUser.getUid();
+        return null;
+    }
+
+    @Override
     public void signUpUser(String email, String password, final String name, final Activity activity, final LoginSignUpModelCallback callback) {
         if(mAuth == null){
             callback.signUpResponse(true,"Internal Error ! Sign up Failed");

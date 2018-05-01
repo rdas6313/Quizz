@@ -9,13 +9,15 @@ import android.support.v7.widget.RecyclerView;
 public class Questiontype{
     private String id;
     private String questionsetname;
+    boolean alreadSelected;
 
     public Questiontype(){
 
     }
-    public Questiontype(String id,String type){
+    public Questiontype(String id,String type_name,boolean alreadSelected){
         this.id = id;
-        questionsetname = type;
+        questionsetname = type_name;
+        this.alreadSelected = alreadSelected;
     }
 
     public String getId(){
@@ -24,6 +26,10 @@ public class Questiontype{
 
     public String getQuestionType(){
         return questionsetname;
+    }
+
+    public boolean isAlreadSelected(){
+        return alreadSelected;
     }
 
 }

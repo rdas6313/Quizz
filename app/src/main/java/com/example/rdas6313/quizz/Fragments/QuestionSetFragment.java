@@ -7,12 +7,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
 import com.example.rdas6313.quizz.Interfaces.QuestionPresenterConnection;
@@ -21,6 +23,7 @@ import com.example.rdas6313.quizz.Presenters.QuestionPresenter;
 import com.example.rdas6313.quizz.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DatabaseError;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,7 +67,7 @@ public class QuestionSetFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull QuestionTypeViewHolder holder, int position, @NonNull Questiontype model) {
                 if(holder != null)
-                    holder.bindView(model.getQuestionType(),true);
+                    holder.bindView(model.getQuestionType(),model.isAlreadSelected());
             }
 
             @NonNull
@@ -80,6 +83,18 @@ public class QuestionSetFragment extends Fragment {
                 super.onDataChanged();
                 if(adapter.getItemCount()>0)
                     flipView(false);
+                else if(adapter.getItemCount() == 0){
+                    offAllView();
+                    Toast.makeText(getContext(),"No Question set Found",Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onError(@NonNull DatabaseError error) {
+                super.onError(error);
+                Log.e(TAG,error.getMessage());
+                offAllView();
+                Toast.makeText(getContext(),error.getMessage(),Toast.LENGTH_LONG).show();
             }
         };
         recyclerView.setAdapter(adapter);
@@ -93,6 +108,11 @@ public class QuestionSetFragment extends Fragment {
             progressBar.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         }
+    }
+
+    private void offAllView(){
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
     }
 
     @Override
