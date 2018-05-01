@@ -5,9 +5,13 @@ import android.util.Log;
 
 import com.example.rdas6313.quizz.Interfaces.LoginSignUpModelConnection;
 import com.example.rdas6313.quizz.Interfaces.QuestionModelConnection;
+import com.example.rdas6313.quizz.Interfaces.QuestionModelResponse;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
@@ -22,6 +26,7 @@ public class QuestionModel implements QuestionModelConnection {
 
     private LoginSignUpModelConnection loginSignUpModelConnection = new LoginAndSignUpModel();
     private final String TAG = QuestionModel.class.getName();
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
     @Override
     public FirebaseRecyclerOptions<Questions> getFirebaseOptionsForQuestions(String question_set_Key) {
@@ -40,6 +45,28 @@ public class QuestionModel implements QuestionModelConnection {
 
                 }).build();
         return moptions;
+    }
+
+    @Override
+    public void addCurrentUserToQuestionSetSelection(String questionSet_key, final QuestionModelResponse listener) {
+        String uid = null;
+        if(loginSignUpModelConnection != null)
+            uid = loginSignUpModelConnection.getCurrentUserId();
+        if(databaseReference != null && uid != null){
+            databaseReference.child("questionset").child(questionSet_key).child("users").child(uid).setValue(true)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                listener.onSelectionResponse(true);
+                            }else{
+                                listener.onSelectionResponse(false);
+                            }
+                        }
+                    });
+        }else{
+            listener.onSelectionResponse(false);
+        }
     }
 
     @Override
@@ -67,9 +94,11 @@ public class QuestionModel implements QuestionModelConnection {
             userId = loginSignUpModelConnection.getCurrentUserId();
         if(userId == null)
             return false;
-        ArrayList<String> list = (ArrayList<String>) response.get("users");
-        if(list != null)
-            return list.contains(userId);
+        if(response.containsKey("users")){
+            Map<String,Object> map = (Map<String,Object>)response.get("users");
+            if(map.containsKey(userId))
+                return true;
+        }
         return false;
     }
 }

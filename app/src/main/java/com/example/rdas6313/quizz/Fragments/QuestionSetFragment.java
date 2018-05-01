@@ -153,7 +153,10 @@ public class QuestionSetFragment extends Fragment {
             Questiontype questiontype = adapter.getItem(getAdapterPosition());
             if(questiontype == null)
                 return;
-            fragmentCallbacks.QuestionSetFragmentCallbacks(questiontype.getId());
+            if(doneBtn.getVisibility() != View.VISIBLE){
+                fragmentCallbacks.QuestionSetFragmentCallbacks(questiontype.getId());
+            }
+
         }
     }
 }

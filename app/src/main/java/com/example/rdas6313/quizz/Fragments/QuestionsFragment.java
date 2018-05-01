@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
 import com.example.rdas6313.quizz.Interfaces.QuestionPresenterConnection;
+import com.example.rdas6313.quizz.Interfaces.QuestionPresenterResponse;
 import com.example.rdas6313.quizz.Models.Questions;
 import com.example.rdas6313.quizz.Models.Questiontype;
 import com.example.rdas6313.quizz.Presenters.QuestionPresenter;
@@ -43,8 +44,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QuestionsFragment extends Fragment implements View.OnClickListener{
-
+public class QuestionsFragment extends Fragment implements View.OnClickListener,QuestionPresenterResponse{
+    String questionSetKey = null;
     private final String TAG = QuestionSetFragment.class.getName();
     private final int SHOW_START_BTN = 1;
     private final int SHOW_QUESTION = 2;
@@ -88,7 +89,6 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String questionSetKey = null;
         Bundle bundle = getArguments();
         if(bundle != null)
             questionSetKey = bundle.getString(getString(R.string.QUESTION_SET_KEY));
@@ -205,6 +205,10 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
 
     private void startQuizz(){
         alreadyStartedQuizz = true;
+
+        if(questionPresenterConnection != null && questionSetKey != null)
+            questionPresenterConnection.addCurrentUserToQuestionSet(questionSetKey,this);
+
         changeView(SHOW_QUESTION);
         startTimer();
         setHasOptionsMenu(true);
@@ -235,6 +239,12 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener{
                 startQuizz();
                 break;
         }
+    }
+
+    @Override
+    public void onAddUserToQuestionSetResponse(boolean isSuccessfull) {
+        if(!isSuccessfull)
+            Log.e(TAG,"Update user to Question set Error");
     }
 
     private class MyViewHolder extends RecyclerView.ViewHolder implements RadioGroup.OnCheckedChangeListener{
