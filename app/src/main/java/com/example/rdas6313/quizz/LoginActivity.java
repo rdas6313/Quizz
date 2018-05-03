@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rdas6313.quizz.Interfaces.PresenterCallBack;
@@ -16,19 +17,22 @@ import com.example.rdas6313.quizz.Presenters.LoginAndSignUp;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,PresenterCallBack{
 
     private PresenterConnection connection;
-    private Button signUpBtn,loginBtn;
+    private Button loginBtn;
     private EditText emailView,passwordView;
+    private TextView forgotPasswordView,signUpBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         connection = new LoginAndSignUp();
-        signUpBtn = (Button)findViewById(R.id.signup);
+        signUpBtn = (TextView) findViewById(R.id.signup);
         loginBtn = (Button)findViewById(R.id.login);
         emailView = (EditText)findViewById(R.id.email);
         passwordView = (EditText)findViewById(R.id.password);
         signUpBtn.setOnClickListener(this);
         loginBtn.setOnClickListener(this);
+        forgotPasswordView = (TextView)findViewById(R.id.forgotPassword);
+        forgotPasswordView.setOnClickListener(this);
     }
 
     @Override
@@ -45,6 +49,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = new Intent(this,SignUpActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void forgotPassword(){
+        //forgot password
     }
 
     private void login(){
@@ -73,6 +81,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.login:
                 login();
+                break;
+            case R.id.forgotPassword:
+                forgotPassword();
                 break;
         }
     }
