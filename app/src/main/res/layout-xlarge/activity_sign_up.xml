@@ -14,7 +14,7 @@
     <EditText
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/name"
@@ -23,7 +23,7 @@
         android:hint="@string/name"/>
     <EditText
         android:drawablePadding="16dp"
-        android:drawableLeft="@drawable/ic_email_black_24dp"
+        android:drawableLeft="@drawable/ic_email_black_48dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
@@ -36,7 +36,7 @@
         android:inputType="textEmailAddress"/>
     <EditText
         android:drawablePadding="16dp"
-        android:drawableLeft="@drawable/ic_https_black_24dp"
+        android:drawableLeft="@drawable/ic_https_black_48dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
@@ -47,9 +47,10 @@
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <EditText
         android:drawablePadding="16dp"
-        android:drawableLeft="@drawable/ic_https_black_24dp"
+        android:drawableLeft="@drawable/ic_https_black_48dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
@@ -60,6 +61,7 @@
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/signup"
         android:layout_width="match_parent"
@@ -69,6 +71,6 @@
         android:background="@color/NoActionBarAccentColor"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="48dp"
         android:text="@string/sign_up"/>
 </LinearLayout>
