@@ -18,4 +18,9 @@
     <string name="name">Name</string>
     <string name="sign_up">Sign Up</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="empty_editText_Error">This Field can\'t be empty</string>
+    <string name="email_formatting_error">Badly Formatted Email</string>
+    <string name="passoword_not_matched">Password Not Matched</string>
+    <string name="Internal_Error">Internal Error</string>
+    <string name="dialog_sign_up">Wait.Signing Up</string>
 </resources>

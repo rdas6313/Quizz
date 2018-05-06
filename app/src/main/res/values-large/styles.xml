@@ -17,7 +17,7 @@
 
     <style name="ediTextStyle">
         <item name="android:textSize">32sp</item>
-        <item name="android:padding">32dp</item>
+        <item name="android:padding">24dp</item>
     </style>
     <style name="logoStyle">
         <item name="android:textColor">@android:color/white</item>

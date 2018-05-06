@@ -1,76 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@drawable/background_drawable"
     android:orientation="vertical"
+    android:id="@+id/coordinatorLayout"
     android:layout_height="match_parent"
     tools:context="com.example.rdas6313.quizz.SignUpActivity">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/logoStyle"/>
-    <EditText
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="32dp"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/name"
-        style="@style/ediTextStyle"
-        android:background="@drawable/editext_background"
-        android:hint="@string/name"/>
-    <EditText
-        android:drawablePadding="16dp"
-        android:drawableLeft="@drawable/ic_email_black_48dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/ediTextStyle"
-        android:background="@drawable/editext_background"
-        android:hint="@string/emailHint"
-        android:inputType="textEmailAddress"/>
-    <EditText
-        android:drawablePadding="16dp"
-        android:drawableLeft="@drawable/ic_https_black_48dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:id="@+id/password"
-        style="@style/ediTextStyle"
-        android:background="@drawable/editext_background"
-        android:hint="@string/passwordHint"
-        android:inputType="textPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/logoStyle"/>
+        <EditText
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            style="@style/ediTextStyle"
+            android:background="@drawable/editext_background"
+            android:hint="@string/name"/>
+        <EditText
+            android:drawablePadding="16dp"
+            android:drawableLeft="@drawable/ic_email_black_48dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ediTextStyle"
+            android:background="@drawable/editext_background"
+            android:hint="@string/emailHint"
+            android:inputType="textEmailAddress"/>
+        <EditText
+            android:drawablePadding="16dp"
+            android:drawableLeft="@drawable/ic_https_black_48dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:id="@+id/password"
+            style="@style/ediTextStyle"
+            android:background="@drawable/editext_background"
+            android:hint="@string/passwordHint"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <EditText
-        android:drawablePadding="16dp"
-        android:drawableLeft="@drawable/ic_https_black_48dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:id="@+id/confirm_password"
-        style="@style/ediTextStyle"
-        android:background="@drawable/editext_background"
-        android:hint="@string/confirm_password"
-        android:inputType="textPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <EditText
+            android:drawablePadding="16dp"
+            android:drawableLeft="@drawable/ic_https_black_48dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:id="@+id/confirm_password"
+            style="@style/ediTextStyle"
+            android:background="@drawable/editext_background"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/signup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/ediTextStyle"
-        android:textColor="@android:color/white"
-        android:background="@color/NoActionBarAccentColor"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="48dp"
-        android:text="@string/sign_up"/>
-</LinearLayout>
+        <Button
+            android:visibility="visible"
+            android:id="@+id/signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ediTextStyle"
+            android:textColor="@android:color/white"
+            android:background="@color/NoActionBarAccentColor"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="48dp"
+            android:text="@string/sign_up"/>
+        <android.support.v4.widget.ContentLoadingProgressBar
+            android:visibility="gone"
+            android:layout_width="112dp"
+            android:layout_height="112dp"
+            style="@style/Base.Widget.AppCompat.ProgressBar"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80dp"
+            android:id="@+id/loadingProgressbar"/>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
