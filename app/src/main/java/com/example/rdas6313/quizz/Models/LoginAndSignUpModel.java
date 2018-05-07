@@ -71,18 +71,18 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            FirebaseUser user =  mAuth.getCurrentUser();
+                            final FirebaseUser user =  mAuth.getCurrentUser();
                             UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(name).build();
                             user.updateProfile(profileChangeRequest).addOnCompleteListener(activity, new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful())
-                                        callback.signUpResponse(false,"Sign Up Successfully");
-                                    else {
-                                        String msg = task.getException().getMessage();
-                                        Log.e(TAG,msg);
-                                        callback.signUpResponse(true,msg);
+                                    if(task.isSuccessful()) {
+                                        sendVerificationMail(user,callback,activity);
+                                    }else {
+                                        String msg = "Sign Up Successfully But unable to update your profile";
+                                        Log.e(TAG,task.getException()+"");
+                                        callback.signUpResponse(false,msg);
                                     }
                                 }
                             });
@@ -93,6 +93,26 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
                         }
                     }
                 });
+    }
+
+    private void sendVerificationMail(FirebaseUser user, final LoginSignUpModelCallback callback, Activity activity){
+        if(user != null){
+            user.sendEmailVerification().addOnCompleteListener(activity, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    String msg = "";
+                    if(task.isSuccessful()){
+                        msg = "Sign Up Successfully.Verification Mail has been sent to your email address";
+                    }else{
+                        msg = "Sign Up Successfully";
+                    }
+                    callback.signUpResponse(false,msg);
+                }
+            });
+        }else{
+            String msg = "Sign Up Successfully";
+            callback.signUpResponse(false,msg);
+        }
     }
 
     @Override
