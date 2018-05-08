@@ -139,4 +139,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onLoginResponse(boolean isError, String msg) {}
+
+    @Override
+    public void onForgotPasswordResponse(boolean isError, String msg) {}
 }

@@ -69,6 +69,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void forgotPassword(){
         //forgot password
+        Intent intent = new Intent(this,ForgotPasswordActivity.class);
+        startActivity(intent);
     }
 
     private void login(){
@@ -137,6 +139,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             finish();
         }
     }
+
+    @Override
+    public void onForgotPasswordResponse(boolean isError, String msg) {}
 
     @Override
     public void onSignUpResponse(boolean isError, String msg) {}

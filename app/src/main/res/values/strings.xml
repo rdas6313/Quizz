@@ -24,4 +24,6 @@
     <string name="Internal_Error">Internal Error</string>
     <string name="dialog_sign_up">Wait.Signing Up</string>
     <string name="login_dialog_text">Authenticating</string>
+    <string name="reset_password">Reset password</string>
+    <string name="reset_password_dialog">Reseting Password</string>
 </resources>

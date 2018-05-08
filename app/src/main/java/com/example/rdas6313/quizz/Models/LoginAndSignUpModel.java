@@ -10,6 +10,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
@@ -40,10 +42,19 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
                             if(callback != null)
                                 callback.loginRespose(false,"Welcome");
                         }else{
-                            String msg = task.getException().getMessage();
-                            Log.e(TAG,msg);
-                            if(callback != null)
-                                callback.loginRespose(true,msg);
+                            Log.e(TAG,task.getException()+"");
+                            try{
+                                throw task.getException();
+                            }catch (FirebaseAuthInvalidUserException e){
+                                if(callback != null)
+                                    callback.loginRespose(true,"Invalid Username Or Password");
+                            }catch (FirebaseAuthInvalidCredentialsException e){
+                                if(callback != null)
+                                    callback.loginRespose(true,"Invalid Username Or Password");
+                            }catch (Exception e){
+                                if(callback != null)
+                                    callback.loginRespose(true,e.getMessage());
+                            }
                         }
                     }
                 });
@@ -58,6 +69,35 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
         if(currentUser != null)
             return currentUser.getUid();
         return null;
+    }
+
+    @Override
+    public void resetPassword(String email, final LoginSignUpModelCallback callback) {
+        if(mAuth == null){
+            callback.resetPasswordResponse(true,"Internal Error");
+            return;
+        }
+        mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    if(callback != null)
+                        callback.resetPasswordResponse(false,"Password Reset Successfully.Check Your Email");
+                }else{
+                    try {
+                        throw task.getException();
+                    }catch (FirebaseAuthInvalidUserException e){
+                        if(callback != null)
+                            callback.resetPasswordResponse(true,"Invalid Email Address.Check Your Email Address");
+                    }catch (Exception e){
+                        Log.e(TAG,task.getException()+"");
+                        if(callback != null)
+                            callback.resetPasswordResponse(true,"Unable To Reset Password.Try again later");
+                    }
+
+                }
+            }
+        });
     }
 
     @Override
@@ -82,14 +122,16 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
                                     }else {
                                         String msg = "Sign Up Successfully But unable to update your profile";
                                         Log.e(TAG,task.getException()+"");
-                                        callback.signUpResponse(false,msg);
+                                        if(callback != null)
+                                            callback.signUpResponse(false,msg);
                                     }
                                 }
                             });
                         }else{
                             String msg = task.getException().getMessage();
                             Log.e(TAG,msg);
-                            callback.signUpResponse(true,msg);
+                            if(callback != null)
+                                callback.signUpResponse(true,msg);
                         }
                     }
                 });
@@ -106,12 +148,14 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
                     }else{
                         msg = "Sign Up Successfully";
                     }
-                    callback.signUpResponse(false,msg);
+                    if(callback != null)
+                        callback.signUpResponse(false,msg);
                 }
             });
         }else{
             String msg = "Sign Up Successfully";
-            callback.signUpResponse(false,msg);
+            if(callback != null)
+                callback.signUpResponse(false,msg);
         }
     }
 

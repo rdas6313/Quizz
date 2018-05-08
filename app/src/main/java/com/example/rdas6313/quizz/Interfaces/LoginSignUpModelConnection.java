@@ -12,4 +12,5 @@ public interface LoginSignUpModelConnection {
     public void signOutUser();
     public void loginUser(String email,String password,Activity activity,LoginSignUpModelCallback callback);
     public String getCurrentUserId();
+    public void resetPassword(String email,LoginSignUpModelCallback callback);
 }

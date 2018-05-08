@@ -51,10 +51,26 @@ public class LoginAndSignUp implements PresenterConnection,LoginSignUpModelCallb
     }
 
     @Override
+    public void resetPasswordResponse(boolean isError, String msg) {
+        if(callBack != null)
+            callBack.onForgotPasswordResponse(isError,msg);
+    }
+
+    @Override
     public void loginUser(String email, String password, Activity activity) {
         callBack = (PresenterCallBack)activity;
         if(connection != null)
             connection.loginUser(email,password,activity,this);
+    }
+
+    @Override
+    public void forgotPassword(String email, PresenterCallBack callBack) {
+        this.callBack = callBack;
+        if(connection != null){
+            connection.resetPassword(email,this);
+        }else{
+            callBack.onForgotPasswordResponse(true,"Internal Error");
+        }
     }
 
     @Override
