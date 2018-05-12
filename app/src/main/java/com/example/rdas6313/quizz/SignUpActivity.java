@@ -93,6 +93,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    @Override
+    public void onChageProfilePicResponse(boolean isError, String msg, String download_link) {}
+
+    @Override
+    public void onProgressProfilePic(int progress) {}
+
     private void showDialog(){
        if(dialog != null)
             dialog.show();

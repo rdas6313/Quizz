@@ -13,4 +13,9 @@ public interface LoginSignUpModelConnection {
     public void loginUser(String email,String password,Activity activity,LoginSignUpModelCallback callback);
     public String getCurrentUserId();
     public void resetPassword(String email,LoginSignUpModelCallback callback);
+    public void updateProfilePic(String path,LoginSignUpModelCallback callback);
+    public String getProfilePhotoUrl();
+    public String getProfileName();
+    public String getEmail();
+    public boolean isEmailVerified();
 }

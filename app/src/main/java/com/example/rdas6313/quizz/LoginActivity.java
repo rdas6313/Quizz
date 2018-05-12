@@ -144,5 +144,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onForgotPasswordResponse(boolean isError, String msg) {}
 
     @Override
+    public void onChageProfilePicResponse(boolean isError, String msg, String download_link) {}
+
+    @Override
+    public void onProgressProfilePic(int progress) {}
+
+    @Override
     public void onSignUpResponse(boolean isError, String msg) {}
 }

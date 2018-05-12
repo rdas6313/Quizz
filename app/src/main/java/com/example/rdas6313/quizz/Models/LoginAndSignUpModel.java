@@ -1,12 +1,14 @@
 package com.example.rdas6313.quizz.Models;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.rdas6313.quizz.Interfaces.LoginSignUpModelCallback;
 import com.example.rdas6313.quizz.Interfaces.LoginSignUpModelConnection;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,6 +16,10 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 /**
  * Created by rdas6313 on 25/4/18.
@@ -23,9 +29,11 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
 
     private final String TAG = LoginAndSignUpModel.class.getName();
     private FirebaseAuth mAuth;
+    private FirebaseStorage firebaseStorage;
 
     public LoginAndSignUpModel(){
         mAuth = FirebaseAuth.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
     }
 
     @Override
@@ -175,5 +183,138 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
     public void signOutUser() {
         if(mAuth != null)
             mAuth.signOut();
+    }
+
+    @Override
+    public void updateProfilePic(String uri_path, final LoginSignUpModelCallback callback) {
+        String userId = getCurrentUserId();
+        if(userId == null) {
+            if(callback != null)
+                callback.onResponseUpdateProfilePic(true,"Internal Error",null);
+            return;
+        }
+        StorageReference rootStorageRef = firebaseStorage.getReference();
+        Uri uri = Uri.parse(uri_path);
+        StorageReference user_imageRef = rootStorageRef.child("user_profile_images/"+userId+".jpg");
+        UploadTask uploadTask = user_imageRef.putFile(uri);
+        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(task.isSuccessful()){
+                    UploadTask.TaskSnapshot snapshot = task.getResult();
+                    updateProfilePhotolink(snapshot.getDownloadUrl().toString(),callback);
+                }else{
+                    if(callback != null)
+                        callback.onResponseUpdateProfilePic(true,"Profile Pic updation Failed",null);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG,e.getMessage());
+                if(callback != null)
+                    callback.onResponseUpdateProfilePic(true,"Profile Pic updation Failed",null);
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                long totalSize = taskSnapshot.getTotalByteCount();
+                long uploadedSize = taskSnapshot.getBytesTransferred();
+                int progress = (int)((100*uploadedSize)/totalSize);
+                if(callback != null)
+                    callback.onProgressUpdateProfilePic(progress);
+            }
+
+        });
+    }
+
+    @Override
+    public String getProfilePhotoUrl() {
+        if(mAuth == null)
+            return null;
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user == null)
+            return null;
+        else{
+            Uri uri = user.getPhotoUrl();
+            if(uri == null)
+                return null;
+            else
+               return uri.toString();
+        }
+
+    }
+
+    @Override
+    public String getProfileName() {
+        if(mAuth == null)
+            return null;
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user == null)
+            return null;
+        else
+            return user.getDisplayName();
+
+    }
+
+    @Override
+    public String getEmail() {
+        if(mAuth == null)
+            return null;
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user == null)
+            return null;
+        else
+            return user.getEmail();
+    }
+
+    @Override
+    public boolean isEmailVerified() {
+        if(mAuth == null)
+            return false;
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user == null)
+            return false;
+        else
+            return user.isEmailVerified();
+    }
+
+    private void deletePhoto(){
+        String userId = getCurrentUserId();
+        if(userId == null)
+            return;
+        StorageReference rootRef = firebaseStorage.getReference();
+        StorageReference imageRef = rootRef.child("user_profile_images/"+userId+".jpg");
+        imageRef.delete();
+    }
+
+    private void updateProfilePhotolink(final String url, final LoginSignUpModelCallback callback){
+        if(mAuth == null) {
+            return;
+        }
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null) {
+            return;
+        }
+        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(Uri.parse(url))
+                .build();
+        currentUser.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    if (callback != null) {
+                        callback.onResponseUpdateProfilePic(false, "Profile Pic updated Successfully", url);
+                    } else {
+
+                        deletePhoto();
+
+                        if (callback != null) {
+                            callback.onResponseUpdateProfilePic(false, "Unable To Update Profile Pic", null);
+                        }
+                    }
+                }
+            }
+        });
     }
 }

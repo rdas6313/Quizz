@@ -72,8 +72,10 @@
             android:name=".SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
-        <activity android:name=".ForgotPasswordActivity"
-            android:theme="@style/NoActionBar"></activity>
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:theme="@style/NoActionBar" />
+        <activity android:name=".EditProfileActivity"></activity>
     </application>
 
 </manifest>

@@ -8,4 +8,6 @@ public interface PresenterCallBack {
     public void onSignUpResponse(boolean isError,String msg);
     public void onLoginResponse(boolean isError,String msg);
     public void onForgotPasswordResponse(boolean isError,String msg);
+    public void onChageProfilePicResponse(boolean isError,String msg,String download_link);
+    public void onProgressProfilePic(int progress);
 }

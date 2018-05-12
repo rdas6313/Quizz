@@ -10,11 +10,26 @@ import com.example.rdas6313.quizz.Interfaces.PresenterCallBack;
 import com.example.rdas6313.quizz.Interfaces.PresenterConnection;
 import com.example.rdas6313.quizz.Models.LoginAndSignUpModel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by rdas6313 on 24/4/18.
  */
 
 public class LoginAndSignUp implements PresenterConnection,LoginSignUpModelCallback{
+    @Override
+    public Map<String, Object> getUserInfo() {
+        Map<String,Object> data = null;
+        if(connection != null){
+            data = new HashMap<>();
+            data.put(PresenterConnection.USER_NAME, connection.getProfileName());
+            data.put(PresenterConnection.USER_EMAIL,connection.getEmail());
+            data.put(PresenterConnection.USER_PHOTO_URL,connection.getProfilePhotoUrl());
+            data.put(PresenterConnection.USER_EMAIL_VERIFIED,connection.isEmailVerified());
+        }
+        return data;
+    }
 
     private PresenterCallBack callBack;
     private final String TAG = LoginAndSignUp.class.getName();
@@ -51,9 +66,29 @@ public class LoginAndSignUp implements PresenterConnection,LoginSignUpModelCallb
     }
 
     @Override
+    public void changeProfilePic(String pic_uri,PresenterCallBack callBack) {
+        this.callBack = callBack;
+        if(connection != null)
+            connection.updateProfilePic(pic_uri,this);
+    }
+
+    @Override
     public void resetPasswordResponse(boolean isError, String msg) {
         if(callBack != null)
             callBack.onForgotPasswordResponse(isError,msg);
+    }
+
+    @Override
+    public void onResponseUpdateProfilePic(boolean isError, String msg, String download_link) {
+        if(callBack != null){
+            callBack.onChageProfilePicResponse(isError,msg,download_link);
+        }
+    }
+
+    @Override
+    public void onProgressUpdateProfilePic(int progress) {
+        if(callBack != null)
+            callBack.onProgressProfilePic(progress);
     }
 
     @Override

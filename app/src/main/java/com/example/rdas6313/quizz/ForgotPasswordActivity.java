@@ -56,6 +56,12 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Present
         Snackbar.make(coordinatorLayout,msg,Snackbar.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onChageProfilePicResponse(boolean isError, String msg, String download_link) {}
+
+    @Override
+    public void onProgressProfilePic(int progress) {}
+
     private void resetPassword(){
         String email = emailView.getText().toString();
         String regx = "\\S+@\\S+\\.\\S+";

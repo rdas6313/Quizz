@@ -1,34 +1,17 @@
 package com.example.rdas6313.quizz;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.example.rdas6313.quizz.Fragments.QuestionSetFragment;
 import com.example.rdas6313.quizz.Fragments.QuestionsFragment;
 import com.example.rdas6313.quizz.Fragments.ScoreBoardFragment;
 import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
-import com.example.rdas6313.quizz.Interfaces.PresenterCallBack;
 import com.example.rdas6313.quizz.Interfaces.PresenterConnection;
 import com.example.rdas6313.quizz.Presenters.LoginAndSignUp;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 public class MainActivity extends AppCompatActivity implements FragmentCallbacks{
     private final String TAG = MainActivity.class.getName();
@@ -62,6 +45,11 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
 
     }
 
+    private void editProfile(){
+        Intent intent = new Intent(this, EditProfileActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -78,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
         switch (item.getItemId()){
             case R.id.logout:
                 logout();
+                return true;
+            case R.id.editProfile:
+                editProfile();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
