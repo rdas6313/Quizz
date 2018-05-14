@@ -26,4 +26,5 @@
     <string name="login_dialog_text">Authenticating</string>
     <string name="reset_password">Reset password</string>
     <string name="reset_password_dialog">Reseting Password</string>
+    <string name="change_password">Change Password</string>
 </resources>

@@ -99,6 +99,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onProgressProfilePic(int progress) {}
 
+    @Override
+    public void onUpdateName(boolean isError) {}
+
     private void showDialog(){
        if(dialog != null)
             dialog.show();

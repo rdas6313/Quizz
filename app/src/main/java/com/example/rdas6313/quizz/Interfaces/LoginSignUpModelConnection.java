@@ -18,4 +18,5 @@ public interface LoginSignUpModelConnection {
     public String getProfileName();
     public String getEmail();
     public boolean isEmailVerified();
+    public void updateName(String name,LoginSignUpModelCallback callback);
 }

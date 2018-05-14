@@ -10,4 +10,5 @@ public interface LoginSignUpModelCallback {
     public void resetPasswordResponse(boolean isError,String msg);
     public void onResponseUpdateProfilePic(boolean isError,String msg,String download_link);
     public void onProgressUpdateProfilePic(int progress);
+    public void onUpdateNameResponse(boolean isError,String name);
 }

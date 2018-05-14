@@ -150,5 +150,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onProgressProfilePic(int progress) {}
 
     @Override
+    public void onUpdateName(boolean isError) {}
+
+    @Override
     public void onSignUpResponse(boolean isError, String msg) {}
 }

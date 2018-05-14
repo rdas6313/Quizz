@@ -31,6 +31,15 @@ public class LoginAndSignUp implements PresenterConnection,LoginSignUpModelCallb
         return data;
     }
 
+    @Override
+    public void changeName(String name, PresenterCallBack callBack) {
+        this.callBack = callBack;
+        if(connection != null)
+            connection.updateName(name,this);
+        else
+            callBack.onUpdateName(true);
+    }
+
     private PresenterCallBack callBack;
     private final String TAG = LoginAndSignUp.class.getName();
     private LoginSignUpModelConnection connection;
@@ -89,6 +98,12 @@ public class LoginAndSignUp implements PresenterConnection,LoginSignUpModelCallb
     public void onProgressUpdateProfilePic(int progress) {
         if(callBack != null)
             callBack.onProgressProfilePic(progress);
+    }
+
+    @Override
+    public void onUpdateNameResponse(boolean isError, String name) {
+        if(callBack != null)
+            callBack.onUpdateName(isError);
     }
 
     @Override

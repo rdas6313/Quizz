@@ -229,6 +229,36 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
     }
 
     @Override
+    public void updateName(final String name, final LoginSignUpModelCallback callback) {
+        if(mAuth == null){
+            if(callback != null)
+                callback.onUpdateNameResponse(true,null);
+            return;
+        }
+        final FirebaseUser user = mAuth.getCurrentUser();
+        if(user == null){
+            if(callback != null)
+                callback.onUpdateNameResponse(true,null);
+            return;
+        }
+
+        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                .setDisplayName(name).build();
+        user.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    if(callback != null)
+                        callback.onUpdateNameResponse(false,name);
+                }else{
+                    if(callback != null)
+                        callback.onUpdateNameResponse(true,user.getDisplayName());
+                }
+            }
+        });
+    }
+
+    @Override
     public String getProfilePhotoUrl() {
         if(mAuth == null)
             return null;

@@ -22,4 +22,5 @@ public interface PresenterConnection {
     public void forgotPassword(String email,PresenterCallBack callBack);
     public void changeProfilePic(String pic_uri,PresenterCallBack callBack);
     public Map<String,Object> getUserInfo();
+    public void changeName(String name,PresenterCallBack callBack);
 }

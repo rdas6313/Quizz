@@ -8,13 +8,13 @@
     android:layout_height="match_parent"
     android:id="@+id/coordinatorLayout"
     tools:context="com.example.rdas6313.quizz.SignUpActivity">
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/Constraint"
             android:padding="32dp">
 
             <ImageView
@@ -48,6 +48,7 @@
                 android:layout_marginBottom="-9dp" />
         </android.support.constraint.ConstraintLayout>
         <EditText
+            android:layout_below="@+id/Constraint"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="0dp"
@@ -57,7 +58,18 @@
             style="@style/ediTextStyle"
             android:background="@drawable/editext_background"
             android:hint="@string/name"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nameIcon"
+            android:src="@drawable/ic_mode_edit_black_24dp"
+            android:layout_alignRight="@+id/name"
+            android:layout_above="@+id/email"
+            android:layout_margin="0dp"
+            android:padding="16dp"
+            android:background="@android:color/transparent"/>
         <EditText
+            android:layout_below="@+id/name"
             android:drawablePadding="16dp"
             android:drawableLeft="@drawable/ic_email_black_24dp"
             android:layout_marginLeft="16dp"
@@ -70,32 +82,19 @@
             android:background="@drawable/editext_background"
             android:hint="@string/emailHint"
             android:inputType="textEmailAddress"/>
-        <EditText
-            android:drawablePadding="16dp"
-            android:drawableLeft="@drawable/ic_https_black_24dp"
+        <Button
+            android:layout_below="@+id/email"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:id="@+id/password"
+            android:layout_marginTop="32dp"
             style="@style/ediTextStyle"
-            android:background="@drawable/editext_background"
-            android:hint="@string/passwordHint"
-            android:inputType="textPassword"
+            android:background="@color/NoActionBarAccentColor"
+            android:textColor="@android:color/white"
+            android:visibility="visible"
+            android:id="@+id/resetPasswordBtn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:drawablePadding="16dp"
-            android:drawableLeft="@drawable/ic_https_black_24dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:id="@+id/confirm_password"
-            style="@style/ediTextStyle"
-            android:background="@drawable/editext_background"
-            android:hint="@string/confirm_password"
-            android:inputType="textPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/change_password"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

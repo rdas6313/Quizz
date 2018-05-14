@@ -10,4 +10,5 @@ public interface PresenterCallBack {
     public void onForgotPasswordResponse(boolean isError,String msg);
     public void onChageProfilePicResponse(boolean isError,String msg,String download_link);
     public void onProgressProfilePic(int progress);
+    public void onUpdateName(boolean isError);
 }
