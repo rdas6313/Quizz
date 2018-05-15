@@ -1,5 +1,6 @@
 package com.example.rdas6313.quizz;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.ActionBar;
@@ -20,10 +22,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.example.rdas6313.quizz.Fragments.CustomDialogFragment;
+import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
 import com.example.rdas6313.quizz.Interfaces.PresenterCallBack;
 import com.example.rdas6313.quizz.Interfaces.PresenterConnection;
 import com.example.rdas6313.quizz.Presenters.LoginAndSignUp;
@@ -33,7 +40,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Map;
 
-public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener,PresenterCallBack{
+public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener,PresenterCallBack,FragmentCallbacks{
 
     private ImageView profileImageView;
     private ImageButton nameIcon;
@@ -43,8 +50,13 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private Map<String,Object> userData;
     private CoordinatorLayout coordinatorLayout;
     private EditText emailView,nameView;
+    private Button changePasswordBtn;
     private final String TAG = EditProfileActivity.class.getName();
     private boolean isInEditMode;
+    private CustomDialogFragment dialogFragment;
+    private Dialog dialog;
+    private TextView dialogTextView;
+    private ProgressBar dialogProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +65,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("Edit Profile");
+            actionBar.setTitle(R.string.edit_profile);
         }
         loginConnection = new LoginAndSignUp();
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorLayout);
@@ -64,11 +76,32 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         nameIcon.setOnClickListener(this);
         nameView.setEnabled(false);
         emailView = (EditText)findViewById(R.id.email);
-        makeRoundImage();
+        //makeRoundImage();
         addProfilePicBtn = findViewById(R.id.addProfilePicBtn);
         addProfilePicBtn.setOnClickListener(this);
+        changePasswordBtn = (Button)findViewById(R.id.changePasswordBtn);
+        changePasswordBtn.setOnClickListener(this);
         loadUserData();
+        dialogFragment = new CustomDialogFragment();
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.photo_upload_dialog);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialogTextView = (TextView)dialog.findViewById(R.id.progressText);
+        dialogProgressBar = (ProgressBar)dialog.findViewById(R.id.progressBar);
+    }
 
+    private void showDialog(){
+        if(dialog != null) {
+            dialog.show();
+            if(dialogTextView != null)
+                dialogTextView.setText("0%");
+        }
+    }
+
+    private void hideDialog(){
+        if(dialog != null)
+            dialog.hide();
     }
 
     private void getPhotoFromGallary(){
@@ -87,8 +120,10 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             case PHOTO_REQUEST:
                 if(resultCode == RESULT_OK && data != null){
                     Uri uri = data.getData();
-                    if(loginConnection != null)
-                        loginConnection.changeProfilePic(uri.toString(),this);
+                    if(loginConnection != null) {
+                        showDialog();
+                        loginConnection.changeProfilePic(uri.toString(), this);
+                    }
                 }
                 break;
         }
@@ -103,22 +138,26 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void loadProfilePic(Uri uri){
-        Picasso.get().load(uri).placeholder(R.mipmap.ic_launcher_round).into(profileImageView, new Callback() {
+        Picasso.get().load(uri).fit().placeholder(R.drawable.avatar).into(profileImageView, new Callback() {
             @Override
             public void onSuccess() {
-               makeRoundImage();
+               //makeRoundImage();
             }
 
             @Override
             public void onError(Exception e) {
                 profileImageView.setImageResource(R.drawable.avatar);
-                makeRoundImage();
+                //makeRoundImage();
             }
         });
     }
 
     private void changeProfilePic(){
         getPhotoFromGallary();
+    }
+
+    private void changePassword(){
+        getSupportFragmentManager().beginTransaction().add(R.id.coordinatorLayout,dialogFragment).commit();
     }
 
     @Override
@@ -129,6 +168,9 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.nameIcon:
                 editName();
+                break;
+            case R.id.changePasswordBtn:
+                changePassword();
                 break;
         }
     }
@@ -168,6 +210,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onChageProfilePicResponse(boolean isError, String msg, String download_link) {
+        hideDialog();
         if(!isError){
             //success
             //loadProfilePic(Uri.parse(download_link));
@@ -179,7 +222,11 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onProgressProfilePic(int progress) {
-
+        Log.e(TAG,"Progress "+progress);
+        if(dialogProgressBar != null && dialogTextView != null) {
+            dialogProgressBar.setProgress(progress);
+            dialogTextView.setText(progress+"%");
+        }
     }
 
     @Override
@@ -188,6 +235,11 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             nameView.setText((String)userData.get(PresenterConnection.USER_NAME));
             Snackbar.make(coordinatorLayout,"Unable To Change Name",Snackbar.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onChangePassword(boolean isError, String msg) {
+
     }
 
     private void loadUserData(){
@@ -214,5 +266,17 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
 
+    @Override
+    public void QuestionSetFragmentCallbacks(String key) {}
 
+    @Override
+    public void QuestionFrgmentCallbacks(int total_question, int right_ans) {}
+
+    @Override
+    public void ScoreBoardFragmentCallback() {}
+
+    @Override
+    public void CustomDialogFragmentCallback(String msg) {
+        Snackbar.make(coordinatorLayout,msg,Snackbar.LENGTH_SHORT).show();
+    }
 }

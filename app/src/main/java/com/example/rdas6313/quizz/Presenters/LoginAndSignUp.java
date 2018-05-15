@@ -40,6 +40,17 @@ public class LoginAndSignUp implements PresenterConnection,LoginSignUpModelCallb
             callBack.onUpdateName(true);
     }
 
+    @Override
+    public void changePassword(String old_password, String new_password, PresenterCallBack callBack) {
+        this.callBack = callBack;
+        if(connection != null) {
+            connection.changePassword(old_password, new_password, this);
+        }else{
+            if(callBack != null)
+                callBack.onChangePassword(true,"Internal Error");
+        }
+    }
+
     private PresenterCallBack callBack;
     private final String TAG = LoginAndSignUp.class.getName();
     private LoginSignUpModelConnection connection;
@@ -104,6 +115,12 @@ public class LoginAndSignUp implements PresenterConnection,LoginSignUpModelCallb
     public void onUpdateNameResponse(boolean isError, String name) {
         if(callBack != null)
             callBack.onUpdateName(isError);
+    }
+
+    @Override
+    public void onUpdatePassword(boolean isError, String msg) {
+        if(callBack != null)
+            callBack.onChangePassword(isError,msg);
     }
 
     @Override

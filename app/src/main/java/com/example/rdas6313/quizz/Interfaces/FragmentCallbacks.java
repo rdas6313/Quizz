@@ -8,4 +8,5 @@ public interface FragmentCallbacks {
     public void QuestionSetFragmentCallbacks(String key);
     public void QuestionFrgmentCallbacks(int total_question,int right_ans);
     public void ScoreBoardFragmentCallback();
+    public void CustomDialogFragmentCallback(String msg);
 }

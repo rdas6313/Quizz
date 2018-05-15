@@ -103,6 +103,9 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
     }
 
     @Override
+    public void CustomDialogFragmentCallback(String msg) {}
+
+    @Override
     public void QuestionFrgmentCallbacks(int total_question, int right_ans) {
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.total_question),total_question);

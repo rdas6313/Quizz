@@ -3,6 +3,7 @@ package com.example.rdas6313.quizz.Models;
 import android.app.Activity;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.constraint.solver.Cache;
 import android.util.Log;
 
 import com.example.rdas6313.quizz.Interfaces.LoginSignUpModelCallback;
@@ -10,10 +11,14 @@ import com.example.rdas6313.quizz.Interfaces.LoginSignUpModelConnection;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
@@ -221,6 +226,7 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
                 long totalSize = taskSnapshot.getTotalByteCount();
                 long uploadedSize = taskSnapshot.getBytesTransferred();
                 int progress = (int)((100*uploadedSize)/totalSize);
+                //Log.e(TAG,"Progress "+progress);
                 if(callback != null)
                     callback.onProgressUpdateProfilePic(progress);
             }
@@ -253,6 +259,54 @@ public class LoginAndSignUpModel implements LoginSignUpModelConnection{
                 }else{
                     if(callback != null)
                         callback.onUpdateNameResponse(true,user.getDisplayName());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void changePassword(String current_password, final String new_password, final LoginSignUpModelCallback callback) {
+        if(mAuth == null){
+            if(callback != null)
+                callback.onUpdatePassword(true,"Internal Error");
+            return;
+        }
+        final FirebaseUser user = mAuth.getCurrentUser();
+        if(user == null){
+            if(callback != null)
+                callback.onUpdatePassword(true,"Internal Error");
+            return;
+        }
+        AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(),current_password);
+        user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    user.updatePassword(new_password).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                if(callback != null)
+                                    callback.onUpdatePassword(false,"Password Changed Successfully");
+                            }else{
+                                String msg = "";
+                                Log.e(TAG,task.getException().getMessage());
+                                try {
+                                    throw task.getException();
+                                }catch (FirebaseAuthWeakPasswordException e){
+                                    msg = e.getMessage();
+                                }catch (Exception e){
+                                    msg = "Password Updation Failed";
+                                }finally {
+                                    if(callback != null)
+                                        callback.onUpdatePassword(true,msg);
+                                }
+                            }
+                        }
+                    });
+                }else{
+                    if(callback != null)
+                        callback.onUpdatePassword(true,"Authtication Failed.Check Your Password");
                 }
             }
         });

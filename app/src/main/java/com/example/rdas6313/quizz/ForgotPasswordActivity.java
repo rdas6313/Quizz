@@ -65,6 +65,9 @@ public class ForgotPasswordActivity extends AppCompatActivity implements Present
     @Override
     public void onUpdateName(boolean isError) {}
 
+    @Override
+    public void onChangePassword(boolean isError, String msg) {}
+
     private void resetPassword(){
         String email = emailView.getText().toString();
         String regx = "\\S+@\\S+\\.\\S+";

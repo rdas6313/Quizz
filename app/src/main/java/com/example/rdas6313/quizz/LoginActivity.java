@@ -153,5 +153,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onUpdateName(boolean isError) {}
 
     @Override
+    public void onChangePassword(boolean isError, String msg) {}
+
+    @Override
     public void onSignUpResponse(boolean isError, String msg) {}
 }

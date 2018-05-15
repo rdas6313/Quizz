@@ -102,6 +102,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onUpdateName(boolean isError) {}
 
+    @Override
+    public void onChangePassword(boolean isError, String msg) {}
+
     private void showDialog(){
        if(dialog != null)
             dialog.show();
