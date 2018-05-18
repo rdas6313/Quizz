@@ -30,4 +30,7 @@
     <string name="password_change_note">Please logout and login again to make password change work properly.</string>
     <string name="password_change_dialog_text">Please Wait</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="get_ready_for_quizz">Get ready for Quizz</string>
+    <string name="question_set_name">q_name</string>
+    <string name="change_password_subtext">chnage your user login password</string>
 </resources>

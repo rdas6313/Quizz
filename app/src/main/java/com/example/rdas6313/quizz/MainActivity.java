@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle("Question sets");
         mConnection = new LoginAndSignUp();
         QuestionSetFragment questionSetFragment = new QuestionSetFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,questionSetFragment,QUESTION_SET_FRAGMENT)
@@ -85,9 +86,11 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
 
 
     @Override
-    public void QuestionSetFragmentCallbacks(String key) {
+    public void QuestionSetFragmentCallbacks(String key,String name) {
         Bundle bundle = new Bundle();
         bundle.putString(getString(R.string.QUESTION_SET_KEY),key);
+        if(key != null && name != null)
+            getSupportActionBar().setTitle(name);
         QuestionsFragment questionsFragment = new QuestionsFragment();
         questionsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,questionsFragment,QUESTION_FRAGMENT)
@@ -96,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
 
     @Override
     public void ScoreBoardFragmentCallback() {
+        getSupportActionBar().setTitle("Question sets");
         QuestionSetFragment questionSetFragment = new QuestionSetFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container,questionSetFragment,QUESTION_SET_FRAGMENT)

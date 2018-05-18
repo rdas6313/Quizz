@@ -14,7 +14,9 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -22,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -42,53 +45,61 @@ import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener,PresenterCallBack,FragmentCallbacks{
 
-    private ImageView profileImageView;
-    private ImageButton nameIcon;
+    private ImageView profileImageView,verifiedEmail;
+    private ImageButton nameIcon,cancelBtn;
     private ImageButton addProfilePicBtn;
     private final int PHOTO_REQUEST = 1;
     private PresenterConnection loginConnection;
     private Map<String,Object> userData;
     private CoordinatorLayout coordinatorLayout;
-    private EditText emailView,nameView;
-    private Button changePasswordBtn;
+    private EditText nameView;
+    private CardView changePasswordBtn;
     private final String TAG = EditProfileActivity.class.getName();
     private boolean isInEditMode;
     private CustomDialogFragment dialogFragment;
     private Dialog dialog;
-    private TextView dialogTextView;
-    private ProgressBar dialogProgressBar;
+    private TextView dialogTextView,emailView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
+        setContentView(R.layout.edit_profile);
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.edit_profile);
+            actionBar.setElevation(0);
         }
         loginConnection = new LoginAndSignUp();
+
+        verifiedEmail = (ImageView)findViewById(R.id.verifiedEmail);
+
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorLayout);
         profileImageView = findViewById(R.id.profilePic);
         profileImageView.setImageResource(R.drawable.avatar);
         nameView = (EditText)findViewById(R.id.name);
         nameIcon = (ImageButton)findViewById(R.id.nameIcon);
+        //cancelBtn = (ImageButton)findViewById(R.id.cancel);
+        //cancelBtn.setOnClickListener(this);
         nameIcon.setOnClickListener(this);
-        nameView.setEnabled(false);
-        emailView = (EditText)findViewById(R.id.email);
+        changeEditText(false);
+        emailView = (TextView)findViewById(R.id.email);
         //makeRoundImage();
         addProfilePicBtn = findViewById(R.id.addProfilePicBtn);
         addProfilePicBtn.setOnClickListener(this);
-        changePasswordBtn = (Button)findViewById(R.id.changePasswordBtn);
+        //changePasswordBtn = (Button)findViewById(R.id.changePasswordBtn);
+        changePasswordBtn = (CardView)findViewById(R.id.changePasswordBtn);
         changePasswordBtn.setOnClickListener(this);
         loadUserData();
         dialogFragment = new CustomDialogFragment();
         dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.photo_upload_dialog);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         dialogTextView = (TextView)dialog.findViewById(R.id.progressText);
-        dialogProgressBar = (ProgressBar)dialog.findViewById(R.id.progressBar);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
     }
 
     private void showDialog(){
@@ -121,7 +132,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 if(resultCode == RESULT_OK && data != null){
                     Uri uri = data.getData();
                     if(loginConnection != null) {
-                        showDialog();
+                      //  showDialog();
+                        progressBar.setVisibility(View.VISIBLE);
                         loginConnection.changeProfilePic(uri.toString(), this);
                     }
                 }
@@ -138,16 +150,16 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void loadProfilePic(Uri uri){
-        Picasso.get().load(uri).fit().placeholder(R.drawable.avatar).into(profileImageView, new Callback() {
+        Picasso.get().load(uri).noFade().resize(300,300).centerCrop().onlyScaleDown().placeholder(R.drawable.avatar).into(profileImageView, new Callback() {
             @Override
             public void onSuccess() {
-               //makeRoundImage();
+              // makeRoundImage();
             }
 
             @Override
             public void onError(Exception e) {
                 profileImageView.setImageResource(R.drawable.avatar);
-                //makeRoundImage();
+               // makeRoundImage();
             }
         });
     }
@@ -158,6 +170,10 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
     private void changePassword(){
         getSupportFragmentManager().beginTransaction().add(R.id.coordinatorLayout,dialogFragment).commit();
+    }
+
+    private void close(){
+        finish();
     }
 
     @Override
@@ -172,6 +188,9 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             case R.id.changePasswordBtn:
                 changePassword();
                 break;
+            case R.id.cancel:
+                close();
+                break;
         }
     }
 
@@ -181,9 +200,23 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    private void changeEditText(boolean enable){
+        if(enable){
+            nameView.setEnabled(true);
+            nameView.setFocusable(true);
+            nameView.setFocusableInTouchMode(true);
+            nameView.requestFocus();
+        }else{
+            nameView.setEnabled(false);
+            //nameView.setInputType(InputType.TYPE_NULL);
+            nameView.setFocusable(false);
+            nameView.setFocusableInTouchMode(false);
+        }
+    }
+
     private void editName(){
         if(!isInEditMode){
-            nameView.setEnabled(true);
+            changeEditText(true);
             isInEditMode = true;
             nameIcon.setImageResource(R.drawable.ic_done_black_24dp);
         }else{
@@ -193,7 +226,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 return;
             }
             saveName(name);
-            nameView.setEnabled(false);
+            changeEditText(false);
             nameIcon.setImageResource(R.drawable.ic_mode_edit_black_24dp);
             isInEditMode = false;
         }
@@ -210,7 +243,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onChageProfilePicResponse(boolean isError, String msg, String download_link) {
-        hideDialog();
+       // hideDialog();
+        progressBar.setVisibility(View.GONE);
         if(!isError){
             //success
             //loadProfilePic(Uri.parse(download_link));
@@ -223,10 +257,12 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onProgressProfilePic(int progress) {
         Log.e(TAG,"Progress "+progress);
-        if(dialogProgressBar != null && dialogTextView != null) {
+       /* if(dialogProgressBar != null && dialogTextView != null) {
             dialogProgressBar.setProgress(progress);
             dialogTextView.setText(progress+"%");
-        }
+        }*/
+       if(progressBar != null)
+           progressBar.setProgress(progress);
     }
 
     @Override
@@ -259,7 +295,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             emailView.setText(email);
             emailView.setEnabled(false);
             if(isEmailVerified) {
-                emailView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_email_black_24dp, 0, R.drawable.ic_done_green_a700_24dp, 0);
+                verifiedEmail.setVisibility(View.VISIBLE);
             }
         }
 
@@ -267,7 +303,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
 
     @Override
-    public void QuestionSetFragmentCallbacks(String key) {}
+    public void QuestionSetFragmentCallbacks(String key,String name) {}
 
     @Override
     public void QuestionFrgmentCallbacks(int total_question, int right_ans) {}

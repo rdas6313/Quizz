@@ -39,6 +39,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -54,7 +56,7 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
     private LinearLayout containerView;
     private Button startBtn;
     private ProgressBar progressBar;
-    private TextView timerView;
+    private TextView timerView,readyTextView,logoTextView;
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseRecyclerAdapter<Questions,MyViewHolder>adapter;
     private QuestionPresenterConnection questionPresenterConnection;
@@ -83,6 +85,8 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
         containerView = (LinearLayout)root.findViewById(R.id.quizzContainer);
         startBtn = (Button)root.findViewById(R.id.startButton);
         startBtn.setOnClickListener(this);
+        readyTextView = (TextView)root.findViewById(R.id.readyText);
+        logoTextView = (TextView)root.findViewById(R.id.logo);
         return root;
     }
 
@@ -90,11 +94,11 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
-        if(bundle != null)
+        if(bundle != null) {
             questionSetKey = bundle.getString(getString(R.string.QUESTION_SET_KEY));
+        }
         else
             return;
-
         rightAns = 0;
         fragmentCallbacks = (FragmentCallbacks)getActivity();
         Log.e(TAG,"QUESTION_KEY "+questionSetKey);
@@ -151,13 +155,19 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
             case 1:
                 progressBar.setVisibility(View.GONE);
                 startBtn.setVisibility(View.VISIBLE);
+                logoTextView.setVisibility(View.VISIBLE);
+                readyTextView.setVisibility(View.VISIBLE);
                 break;
             case 2:
+                logoTextView.setVisibility(View.GONE);
+                readyTextView.setVisibility(View.GONE);
                 startBtn.setVisibility(View.GONE);
                 containerView.setVisibility(View.VISIBLE);
                 break;
             default:
                 progressBar.setVisibility(View.GONE);
+                logoTextView.setVisibility(View.GONE);
+                readyTextView.setVisibility(View.GONE);
                 startBtn.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.GONE);
                 Toast.makeText(getContext(),"Error",Toast.LENGTH_SHORT).show();

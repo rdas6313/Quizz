@@ -154,7 +154,7 @@ public class QuestionSetFragment extends Fragment {
             if(questiontype == null)
                 return;
             if(doneBtn.getVisibility() != View.VISIBLE){
-                fragmentCallbacks.QuestionSetFragmentCallbacks(questiontype.getId());
+                fragmentCallbacks.QuestionSetFragmentCallbacks(questiontype.getId(),questiontype.getQuestionType());
             }
 
         }
