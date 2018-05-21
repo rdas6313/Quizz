@@ -7,7 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,11 +53,13 @@ public class CustomDialogFragment extends Fragment implements View.OnClickListen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.edit_profile_layout2, container, false);
-        connection = new LoginAndSignUp();
         coordinatorLayout = root.findViewById(R.id.coordinatorLayout);
         oldPasswordView = (EditText)root.findViewById(R.id.old_password);
-        newPasswordView = (EditText)root.findViewById(R.id.new_passowrd);
+        oldPasswordView.addTextChangedListener(new MyTextWatcher(oldPasswordView));
+        newPasswordView = (EditText)root.findViewById(R.id.new_password);
+        newPasswordView.addTextChangedListener(new MyTextWatcher(newPasswordView));
         confirmPasswordView = (EditText)root.findViewById(R.id.confirm_password);
+        confirmPasswordView.addTextChangedListener(new MyTextWatcher(confirmPasswordView));
         //doneBtn = (Button)root.findViewById(R.id.done);
         //doneBtn.setOnClickListener(this);
         //cancelBtn = (ImageButton) root.findViewById(R.id.cancel);
@@ -70,6 +74,7 @@ public class CustomDialogFragment extends Fragment implements View.OnClickListen
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
         connection = new LoginAndSignUp();
         fragmentCallbacks = (FragmentCallbacks)getActivity();
         dialog = new Dialog(getContext());
@@ -126,26 +131,51 @@ public class CustomDialogFragment extends Fragment implements View.OnClickListen
         }
     }*/
 
-   private void done(){
+   private boolean validCurrentPassword(){
        String old_pasword = oldPasswordView.getText().toString();
-       String new_password = newPasswordView.getText().toString();
-       String confirm_password = confirmPasswordView.getText().toString();
-       boolean isError = false;
        if(TextUtils.isEmpty(old_pasword)){
            currentpasswordInputLayout.setError(getString(R.string.empty_editText_Error));
-           isError = true;
+           return true;
+       }else{
+           currentpasswordInputLayout.setErrorEnabled(false);
+            return false;
        }
+   }
+   private boolean validNewPassword(){
+       String new_password = newPasswordView.getText().toString();
        if(TextUtils.isEmpty(new_password)){
            newpasswordInputLayout.setError(getString(R.string.empty_editText_Error));
-           isError = true;
+           return true;
+       }else{
+           newpasswordInputLayout.setErrorEnabled(false);
+           return false;
        }
+   }
+
+   private boolean validConfirmPassword(){
+       String confirm_password = confirmPasswordView.getText().toString();
        if(TextUtils.isEmpty(confirm_password)){
            confirmpasswordInputLayout.setError(getString(R.string.empty_editText_Error));
-           isError = true;
+           return true;
+       }else{
+           confirmpasswordInputLayout.setErrorEnabled(false);
+           return false;
        }
+   }
+   private void done(){
+       boolean isError = false;
+
+       isError = validCurrentPassword();
+       isError = validNewPassword();
+       isError = validConfirmPassword();
+
 
        if(isError)
            return;
+
+       String old_pasword = oldPasswordView.getText().toString();
+       String new_password = newPasswordView.getText().toString();
+       String confirm_password = confirmPasswordView.getText().toString();
 
        if(!new_password.equals(confirm_password)){
            String msg = "New Password and Re-type Password are Not Matching";
@@ -222,4 +252,38 @@ public class CustomDialogFragment extends Fragment implements View.OnClickListen
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private class MyTextWatcher implements TextWatcher{
+        private View view;
+
+        MyTextWatcher(View v){
+            view = v;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            switch (view.getId()){
+                case R.id.old_password:
+                    validCurrentPassword();
+                    break;
+                case R.id.new_password:
+                    validNewPassword();
+                    break;
+                case R.id.confirm_password:
+                    validConfirmPassword();
+                    break;
+            }
+        }
+    }
+
 }
