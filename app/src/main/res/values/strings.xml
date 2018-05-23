@@ -33,4 +33,8 @@
     <string name="get_ready_for_quizz">Get ready for Quizz</string>
     <string name="question_set_name">q_name</string>
     <string name="change_password_subtext">chnage your user login password</string>
+    <string name="welcome">Welcome</string>
+    <string name="score_label">Score</string>
+    <string name="question_set_label">Question Set</string>
+    <string name="solved_set_label">Solved Set</string>
 </resources>

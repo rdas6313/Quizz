@@ -270,6 +270,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         if(isError){
             nameView.setText((String)userData.get(PresenterConnection.USER_NAME));
             Snackbar.make(coordinatorLayout,"Unable To Change Name",Snackbar.LENGTH_SHORT).show();
+        }else{
+            Snackbar.make(coordinatorLayout,"Name Changed Successfully",Snackbar.LENGTH_SHORT).show();
         }
     }
 

@@ -162,10 +162,14 @@
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
+
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/cardview_ripple_background"
+            app:cardBackgroundColor="@color/cardview_light_background"
             android:id="@+id/changePasswordBtn"
             app:cardCornerRadius="5dp"
             app:cardElevation="5dp"
-            app:cardBackgroundColor="@android:color/white"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"

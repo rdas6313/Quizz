@@ -1,11 +1,15 @@
 package com.example.rdas6313.quizz;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.rdas6313.quizz.Fragments.DashboardFragment;
 import com.example.rdas6313.quizz.Fragments.QuestionSetFragment;
 import com.example.rdas6313.quizz.Fragments.QuestionsFragment;
 import com.example.rdas6313.quizz.Fragments.ScoreBoardFragment;
@@ -13,7 +17,7 @@ import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
 import com.example.rdas6313.quizz.Interfaces.PresenterConnection;
 import com.example.rdas6313.quizz.Presenters.LoginAndSignUp;
 
-public class MainActivity extends AppCompatActivity implements FragmentCallbacks{
+public class MainActivity extends AppCompatActivity implements FragmentCallbacks,BottomNavigationView.OnNavigationItemSelectedListener{
     private final String TAG = MainActivity.class.getName();
     private PresenterConnection mConnection;
   //  private QuestionSetFragment questionSetFragment;
@@ -23,16 +27,21 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
    // private ScoreBoardFragment scoreBoardFragment;
     private final String SCORE_BOARD_FRAGMENT = "score_board_fragment";
 
+    private BottomNavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setTitle("Question sets");
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setElevation(0);
+        }
         mConnection = new LoginAndSignUp();
         QuestionSetFragment questionSetFragment = new QuestionSetFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,questionSetFragment,QUESTION_SET_FRAGMENT)
-                .commit();
-
+        navigationView = (BottomNavigationView)findViewById(R.id.bottom_navigation);
+        navigationView.setOnNavigationItemSelectedListener(this);
+        start_home();
     }
 
     @Override
@@ -106,6 +115,16 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
                 .commit();
     }
 
+    private void start_questionSet(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new QuestionSetFragment())
+                .commit();
+    }
+
+    private void start_home(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new DashboardFragment())
+                .commit();
+    }
+
     @Override
     public void CustomDialogFragmentCallback(String msg) {}
 
@@ -118,5 +137,18 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
         scoreBoardFragment.setArguments(bundle);
        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,scoreBoardFragment,SCORE_BOARD_FRAGMENT)
                .commit();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.question_set:
+                start_questionSet();
+                return true;
+            case R.id.homeView:
+                start_home();
+                return true;
+        }
+        return false;
     }
 }

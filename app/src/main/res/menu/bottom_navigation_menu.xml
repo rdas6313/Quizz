@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Home"
+        android:icon="@drawable/ic_home_white_24dp"
+        android:id="@+id/homeView"/>
+    <item android:id="@+id/question_set"
+        android:icon="@drawable/icons8_questions_96"
+        android:title="Question Set"/>
+</menu>
