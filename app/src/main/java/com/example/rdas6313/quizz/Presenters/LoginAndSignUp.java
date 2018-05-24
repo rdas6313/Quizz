@@ -23,7 +23,7 @@ public class LoginAndSignUp implements PresenterConnection,LoginSignUpModelCallb
         Map<String,Object> data = null;
         if(connection != null){
             data = new HashMap<>();
-            Log.e(TAG,"name "+connection.getProfileName());
+          //  Log.e(TAG,"name "+connection.getProfileName());
             data.put(PresenterConnection.USER_NAME, connection.getProfileName());
             data.put(PresenterConnection.USER_EMAIL,connection.getEmail());
             data.put(PresenterConnection.USER_PHOTO_URL,connection.getProfilePhotoUrl());

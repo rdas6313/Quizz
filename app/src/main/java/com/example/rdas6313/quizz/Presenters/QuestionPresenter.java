@@ -42,6 +42,13 @@ public class QuestionPresenter implements QuestionPresenterConnection,QuestionMo
     }
 
     @Override
+    public void getUserScoreInfo(QuestionPresenterResponse response) {
+        questionPresenterResponse = response;
+        if(modelConnection != null)
+            modelConnection.getUserQuestionSetInfo(this);
+    }
+
+    @Override
     public FirebaseRecyclerOptions<Questiontype> getDataForQuestionSet() {
         if(modelConnection != null)
            return modelConnection.getFirebaseOptionsForQuestionSet();
@@ -52,5 +59,11 @@ public class QuestionPresenter implements QuestionPresenterConnection,QuestionMo
     public void onSelectionResponse(boolean isSuccessfull) {
         if(questionPresenterResponse != null)
             questionPresenterResponse.onAddUserToQuestionSetResponse(isSuccessfull);
+    }
+
+    @Override
+    public void onUserQuestionSetResponse(long totalQuestionSet, long attempt, long score) {
+        if(questionPresenterResponse != null)
+            questionPresenterResponse.onGettingUserScoreinfo(totalQuestionSet, attempt, score);
     }
 }

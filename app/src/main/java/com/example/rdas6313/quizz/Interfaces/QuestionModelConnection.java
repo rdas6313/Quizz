@@ -12,4 +12,5 @@ public interface QuestionModelConnection {
     public FirebaseRecyclerOptions<Questiontype> getFirebaseOptionsForQuestionSet();
     public FirebaseRecyclerOptions<Questions> getFirebaseOptionsForQuestions(String question_set_key);
     public void addCurrentUserToQuestionSetSelection(String questionSet_key,QuestionModelResponse modelResponse);
+    public void getUserQuestionSetInfo(QuestionModelResponse modelResponse);
 }

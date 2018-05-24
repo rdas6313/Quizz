@@ -6,4 +6,5 @@ package com.example.rdas6313.quizz.Interfaces;
 
 public interface QuestionPresenterResponse {
     public void onAddUserToQuestionSetResponse(boolean isSuccessfull);
+    public void onGettingUserScoreinfo(long totalQuestionSet,long attemptSet,long Score);
 }

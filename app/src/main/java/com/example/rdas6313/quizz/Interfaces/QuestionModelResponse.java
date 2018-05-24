@@ -6,4 +6,5 @@ package com.example.rdas6313.quizz.Interfaces;
 
 public interface QuestionModelResponse {
     public void onSelectionResponse(boolean isSuccessfull);
+    public void onUserQuestionSetResponse(long totalQuestionSet,long attempt,long score);
 }

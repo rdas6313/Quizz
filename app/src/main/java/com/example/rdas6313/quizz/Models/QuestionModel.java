@@ -10,10 +10,13 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -53,7 +56,7 @@ public class QuestionModel implements QuestionModelConnection {
         if(loginSignUpModelConnection != null)
             uid = loginSignUpModelConnection.getCurrentUserId();
         if(databaseReference != null && uid != null){
-            databaseReference.child("questionset").child(questionSet_key).child("users").child(uid).setValue(true)
+            databaseReference.child("questionset").child(questionSet_key).child("users").child(uid).setValue(0)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -67,6 +70,33 @@ public class QuestionModel implements QuestionModelConnection {
         }else{
             listener.onSelectionResponse(false);
         }
+    }
+
+    @Override
+    public void getUserQuestionSetInfo(final QuestionModelResponse modelResponse) {
+        if(databaseReference == null)
+            return;
+        databaseReference.child("questionset").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long score = 0,rightAns,attempt=0;
+                long tota_set = dataSnapshot.getChildrenCount();
+                for (DataSnapshot data:dataSnapshot.getChildren()) {
+                    Map<String,Object>map = (Map<String, Object>) data.getValue();
+                    long each_question_point = (long)data.child("point").getValue();
+                    rightAns = getUserRightAns(map);
+                    if(rightAns > -1){
+                        score += each_question_point*rightAns;
+                        attempt++;
+                    }
+                }
+                if(modelResponse != null)
+                    modelResponse.onUserQuestionSetResponse(tota_set,attempt,score);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
     @Override
@@ -100,5 +130,19 @@ public class QuestionModel implements QuestionModelConnection {
                 return true;
         }
         return false;
+    }
+
+    private long getUserRightAns(Map<String,Object> response){
+        String userId = null;
+        if(loginSignUpModelConnection != null)
+            userId = loginSignUpModelConnection.getCurrentUserId();
+        if(userId == null)
+            return -1;
+        if(response.containsKey("users")){
+            Map<String,Object> map = (Map<String,Object>)response.get("users");
+            if(map.containsKey(userId))
+                return (long)map.get(userId);
+        }
+        return -1;
     }
 }

@@ -257,6 +257,9 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
             Log.e(TAG,"Update user to Question set Error");
     }
 
+    @Override
+    public void onGettingUserScoreinfo(long totalQuestionSet, long attemptSet, long Score) {}
+
     private class MyViewHolder extends RecyclerView.ViewHolder implements RadioGroup.OnCheckedChangeListener{
         private TextView questionView;
         private RadioButton r1,r2,r3;
