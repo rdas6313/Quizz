@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +59,8 @@ public class QuestionSetFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         fragmentCallbacks = (FragmentCallbacks) getContext();
+        if(fragmentCallbacks != null)
+            fragmentCallbacks.ActionBarElevation(true);
         questionPresenterConnection = new QuestionPresenter();
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -67,7 +70,7 @@ public class QuestionSetFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull QuestionTypeViewHolder holder, int position, @NonNull Questiontype model) {
                 if(holder != null)
-                    holder.bindView(model.getQuestionType(),model.isAlreadSelected());
+                    holder.bindView(model);
             }
 
             @NonNull
@@ -131,21 +134,29 @@ public class QuestionSetFragment extends Fragment {
     }
 
     private class QuestionTypeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private TextView questionType;
-        private ImageButton doneBtn;
+        private TextView questionType,scoreLabel,scoreView;
+        private ImageView doneBtn;
 
         public QuestionTypeViewHolder(View root){
             super(root);
             root.setOnClickListener(this);
             questionType = (TextView)root.findViewById(R.id.questiontype);
-            doneBtn = (ImageButton)root.findViewById(R.id.done);
+            scoreLabel = (TextView)root.findViewById(R.id.score_label);
+            scoreView = (TextView)root.findViewById(R.id.score);
+            doneBtn = (ImageView) root.findViewById(R.id.done);
         }
-        public void bindView(String q_type,boolean shouldMark){
-            if(shouldMark)
-                doneBtn.setVisibility(View.VISIBLE);
-            else
-                doneBtn.setVisibility(View.GONE);
-            questionType.setText(q_type);
+        public void bindView(Questiontype model){
+            if(model.isAlreadSelected()) {
+                doneBtn.setImageResource(R.drawable.ic_done_green_a700_24dp);
+                scoreLabel.setText(R.string.question_set_score_label);
+                scoreView.setText(model.getPoint()*model.rightAns()+"");
+            }
+            else {
+                doneBtn.setImageResource(R.drawable.ic_keyboard_arrow_right_light_blue_a100_24dp);
+                scoreLabel.setText(R.string.question_set_point);
+                scoreView.setText(model.getPoint()+"");
+            }
+            questionType.setText(model.getQuestionType());
         }
 
         @Override
@@ -153,7 +164,7 @@ public class QuestionSetFragment extends Fragment {
             Questiontype questiontype = adapter.getItem(getAdapterPosition());
             if(questiontype == null)
                 return;
-            if(doneBtn.getVisibility() != View.VISIBLE){
+            if(!questiontype.isAlreadSelected()){
                 fragmentCallbacks.QuestionSetFragmentCallbacks(questiontype.getId(),questiontype.getQuestionType());
             }
 

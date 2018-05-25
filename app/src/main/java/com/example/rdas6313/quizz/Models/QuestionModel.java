@@ -109,8 +109,12 @@ public class QuestionModel implements QuestionModelConnection {
                     public Questiontype parseSnapshot(@NonNull DataSnapshot snapshot) {
                     //    Log.e(TAG,snapshot.getKey()+" "+snapshot.getValue());
                         Map<String,Object> map = (Map<String,Object>)snapshot.getValue();
-                        boolean alredySelected = checkIfUserIdExist(map);
-                        Questiontype questiontype = new Questiontype(snapshot.getKey(),(String)map.get("name"),alredySelected);
+                        long rightAns = getUserRightAns(map);
+                        boolean alredySelected = true;
+                        if(rightAns == -1)
+                            alredySelected = false;
+                        /*boolean alredySelected = checkIfUserIdExist(map);*/
+                        Questiontype questiontype = new Questiontype(snapshot.getKey(),(String)map.get("name"),alredySelected,(long)map.get("point"),rightAns);
                         return questiontype;
                     }
                 })

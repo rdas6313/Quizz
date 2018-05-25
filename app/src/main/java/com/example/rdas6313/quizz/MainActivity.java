@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -28,21 +29,22 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
     private final String SCORE_BOARD_FRAGMENT = "score_board_fragment";
 
     private BottomNavigationView navigationView;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setElevation(0);
-        }
+        actionBar = getSupportActionBar();
+
         mConnection = new LoginAndSignUp();
         QuestionSetFragment questionSetFragment = new QuestionSetFragment();
         navigationView = (BottomNavigationView)findViewById(R.id.bottom_navigation);
         navigationView.setOnNavigationItemSelectedListener(this);
         start_home();
     }
+
+
 
     @Override
     protected void onResume() {
@@ -127,6 +129,19 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
 
     @Override
     public void CustomDialogFragmentCallback(String msg) {}
+
+    @Override
+    public void ActionBarElevation(boolean needToShow) {
+        if(needToShow){
+            if(actionBar != null){
+                actionBar.setElevation((float) 8.0);
+            }
+        }else{
+            if(actionBar != null){
+                actionBar.setElevation(0);
+            }
+        }
+    }
 
     @Override
     public void QuestionFrgmentCallbacks(int total_question, int right_ans) {

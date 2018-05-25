@@ -9,4 +9,5 @@ public interface FragmentCallbacks {
     public void QuestionFrgmentCallbacks(int total_question,int right_ans);
     public void ScoreBoardFragmentCallback();
     public void CustomDialogFragmentCallback(String msg);
+    public void ActionBarElevation(boolean needToShow);
 }

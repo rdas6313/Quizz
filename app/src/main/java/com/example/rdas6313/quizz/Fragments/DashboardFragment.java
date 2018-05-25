@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
 import com.example.rdas6313.quizz.Interfaces.PresenterCallBack;
 import com.example.rdas6313.quizz.Interfaces.PresenterConnection;
 import com.example.rdas6313.quizz.Interfaces.QuestionPresenterConnection;
@@ -55,6 +56,9 @@ public class DashboardFragment extends Fragment implements QuestionPresenterResp
         super.onActivityCreated(savedInstanceState);
         loginConnection = new LoginAndSignUp();
         questionConnection = new QuestionPresenter();
+        FragmentCallbacks callbacks = (FragmentCallbacks) getActivity();
+        if(callbacks != null)
+            callbacks.ActionBarElevation(false);
     }
 
     private void loadUserData(){

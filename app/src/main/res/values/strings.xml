@@ -37,4 +37,6 @@
     <string name="score_label">Score</string>
     <string name="question_set_label">Question Set</string>
     <string name="solved_set_label">Solved Set</string>
+    <string name="question_set_point">Each question point</string>
+    <string name="question_set_score_label">Your score</string>
 </resources>

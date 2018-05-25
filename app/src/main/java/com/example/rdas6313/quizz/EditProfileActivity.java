@@ -317,4 +317,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     public void CustomDialogFragmentCallback(String msg) {
         Snackbar.make(coordinatorLayout,msg,Snackbar.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void ActionBarElevation(boolean needToShow) {}
 }
