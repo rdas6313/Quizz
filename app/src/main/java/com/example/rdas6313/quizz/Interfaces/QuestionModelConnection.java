@@ -11,6 +11,6 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 public interface QuestionModelConnection {
     public FirebaseRecyclerOptions<Questiontype> getFirebaseOptionsForQuestionSet();
     public FirebaseRecyclerOptions<Questions> getFirebaseOptionsForQuestions(String question_set_key);
-    public void addCurrentUserToQuestionSetSelection(String questionSet_key,QuestionModelResponse modelResponse);
+    public void addCurrentUserToQuestionSetSelection(String questionSet_key,QuestionModelResponse modelResponse,long score);
     public void getUserQuestionSetInfo(QuestionModelResponse modelResponse);
 }

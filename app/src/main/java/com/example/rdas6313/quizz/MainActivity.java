@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.rdas6313.quizz.Fragments.DashboardFragment;
 import com.example.rdas6313.quizz.Fragments.QuestionSetFragment;
@@ -97,14 +98,17 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
 
 
     @Override
-    public void QuestionSetFragmentCallbacks(String key,String name) {
+    public void QuestionSetFragmentCallbacks(String key,String name,long point) {
+        Log.e(TAG,"Each Point "+point);
         Bundle bundle = new Bundle();
         bundle.putString(getString(R.string.QUESTION_SET_KEY),key);
+        bundle.putLong(getString(R.string.queestionSet_point),point);
         if(key != null && name != null)
             getSupportActionBar().setTitle(name);
         QuestionsFragment questionsFragment = new QuestionsFragment();
         questionsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,questionsFragment,QUESTION_FRAGMENT)
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -135,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
         if(needToShow){
             if(actionBar != null){
                 actionBar.setElevation((float) 8.0);
+              //  actionBar.setDisplayHomeAsUpEnabled(true);
             }
         }else{
             if(actionBar != null){
@@ -144,10 +149,21 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
     }
 
     @Override
-    public void QuestionFrgmentCallbacks(int total_question, int right_ans) {
+    public void setBottomNavigartionBarVisibility(boolean visibility) {
+        if(visibility){
+            navigationView.setVisibility(View.VISIBLE);
+        }else{
+            navigationView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void QuestionFrgmentCallbacks(int total_question, int right_ans,long each_question_point,String q_key) {
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.total_question),total_question);
         bundle.putInt(getString(R.string.right_ans),right_ans);
+        bundle.putString(getString(R.string.questionSet_key),q_key);
+        bundle.putLong(getString(R.string.question_set_point),each_question_point);
         ScoreBoardFragment scoreBoardFragment = new ScoreBoardFragment();
         scoreBoardFragment.setArguments(bundle);
        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,scoreBoardFragment,SCORE_BOARD_FRAGMENT)

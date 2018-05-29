@@ -51,12 +51,12 @@ public class QuestionModel implements QuestionModelConnection {
     }
 
     @Override
-    public void addCurrentUserToQuestionSetSelection(String questionSet_key, final QuestionModelResponse listener) {
+    public void addCurrentUserToQuestionSetSelection(String questionSet_key, final QuestionModelResponse listener,long score) {
         String uid = null;
         if(loginSignUpModelConnection != null)
             uid = loginSignUpModelConnection.getCurrentUserId();
         if(databaseReference != null && uid != null){
-            databaseReference.child("questionset").child(questionSet_key).child("users").child(uid).setValue(0)
+            databaseReference.child("questionset").child(questionSet_key).child("users").child(uid).setValue(score)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

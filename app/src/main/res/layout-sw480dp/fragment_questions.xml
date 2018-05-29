@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/get_ready_for_quizz"
-        android:textSize="24sp"
+        android:textSize="28sp"
         android:textColor="@color/colorPrimary"
         android:layout_centerHorizontal="true"/>
     <Button
@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
-        android:padding="24dp"
+        android:padding="32dp"
         android:text="Start Quizz"
         android:textColor="@android:color/white"
         android:textSize="20sp"

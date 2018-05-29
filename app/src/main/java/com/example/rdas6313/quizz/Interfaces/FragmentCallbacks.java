@@ -5,9 +5,10 @@ package com.example.rdas6313.quizz.Interfaces;
  */
 
 public interface FragmentCallbacks {
-    public void QuestionSetFragmentCallbacks(String key,String name);
-    public void QuestionFrgmentCallbacks(int total_question,int right_ans);
+    public void QuestionSetFragmentCallbacks(String key,String name,long point);
+    public void QuestionFrgmentCallbacks(int total_question,int right_ans,long each_question_point,String question_key);
     public void ScoreBoardFragmentCallback();
     public void CustomDialogFragmentCallback(String msg);
     public void ActionBarElevation(boolean needToShow);
+    public void setBottomNavigartionBarVisibility(boolean visibility);
 }

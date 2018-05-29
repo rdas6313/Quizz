@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -56,7 +57,8 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
     private LinearLayout containerView;
     private Button startBtn;
     private ProgressBar progressBar;
-    private TextView timerView,readyTextView,logoTextView;
+    private TextView timerView,readyTextView;
+    private ImageView logoTextView;
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseRecyclerAdapter<Questions,MyViewHolder>adapter;
     private QuestionPresenterConnection questionPresenterConnection;
@@ -66,7 +68,7 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
     private boolean alreadyFinished = false;
     private boolean alreadyStartedQuizz = false;
     private int rightAns;
-
+    private long each_question_point;
 
     public QuestionsFragment() {}
 
@@ -86,7 +88,7 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
         startBtn = (Button)root.findViewById(R.id.startButton);
         startBtn.setOnClickListener(this);
         readyTextView = (TextView)root.findViewById(R.id.readyText);
-        logoTextView = (TextView)root.findViewById(R.id.logo);
+        logoTextView = (ImageView) root.findViewById(R.id.image);
         return root;
     }
 
@@ -96,11 +98,14 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
         Bundle bundle = getArguments();
         if(bundle != null) {
             questionSetKey = bundle.getString(getString(R.string.QUESTION_SET_KEY));
+            each_question_point = bundle.getLong(getString(R.string.queestionSet_point));
         }
         else
             return;
         rightAns = 0;
         fragmentCallbacks = (FragmentCallbacks)getActivity();
+        if(fragmentCallbacks != null)
+            fragmentCallbacks.setBottomNavigartionBarVisibility(false);
         Log.e(TAG,"QUESTION_KEY "+questionSetKey);
         questionPresenterConnection = new QuestionPresenter();
         layoutManager = new LinearLayoutManager(getContext());
@@ -205,10 +210,10 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
     }
 
     private void finishedQuizz(){
-        Log.e(TAG,"Right Ans "+rightAns);
+        //Log.e(TAG,"Right Ans "+rightAns+" "+each_question_point);
         stopTimer();
         if(fragmentCallbacks != null)
-            fragmentCallbacks.QuestionFrgmentCallbacks(adapter.getItemCount(),rightAns);
+            fragmentCallbacks.QuestionFrgmentCallbacks(adapter.getItemCount(),rightAns,each_question_point,questionSetKey);
         alreadyFinished = true;
 
     }
@@ -315,6 +320,9 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case android.R.id.home:
+                Log.e(TAG,"onCLiked");
+                return true;
             case R.id.doneQuizz:
                 finishedQuizz();
                 return true;
@@ -322,4 +330,5 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

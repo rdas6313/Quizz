@@ -57,8 +57,10 @@ public class DashboardFragment extends Fragment implements QuestionPresenterResp
         loginConnection = new LoginAndSignUp();
         questionConnection = new QuestionPresenter();
         FragmentCallbacks callbacks = (FragmentCallbacks) getActivity();
-        if(callbacks != null)
+        if(callbacks != null) {
+            callbacks.setBottomNavigartionBarVisibility(true);
             callbacks.ActionBarElevation(false);
+        }
     }
 
     private void loadUserData(){

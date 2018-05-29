@@ -30,10 +30,21 @@ public class QuestionPresenter implements QuestionPresenterConnection,QuestionMo
     }
 
     @Override
+    public void addCurrentUserToQuestionSet(String questionSet_Key, QuestionPresenterResponse presenterResponse, long score) {
+        questionPresenterResponse = presenterResponse;
+        if(modelConnection != null){
+            modelConnection.addCurrentUserToQuestionSetSelection(questionSet_Key,this,score);
+        }else{
+            if(presenterResponse != null)
+                presenterResponse.onAddUserToQuestionSetResponse(false);
+        }
+    }
+
+    @Override
     public void addCurrentUserToQuestionSet(String questionSet_Key, QuestionPresenterResponse presenterResponse) {
         questionPresenterResponse = presenterResponse;
         if(modelConnection != null){
-            modelConnection.addCurrentUserToQuestionSetSelection(questionSet_Key,this);
+            modelConnection.addCurrentUserToQuestionSetSelection(questionSet_Key,this,0);
         }else{
             if(presenterResponse != null)
                 presenterResponse.onAddUserToQuestionSetResponse(false);

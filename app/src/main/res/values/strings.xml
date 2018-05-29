@@ -30,7 +30,7 @@
     <string name="password_change_note">Please logout and login again to make password change work properly.</string>
     <string name="password_change_dialog_text">Please Wait</string>
     <string name="edit_profile">Edit Profile</string>
-    <string name="get_ready_for_quizz">Get ready for Quizz</string>
+    <string name="get_ready_for_quizz">Best of luck</string>
     <string name="question_set_name">q_name</string>
     <string name="change_password_subtext">chnage your user login password</string>
     <string name="welcome">Welcome</string>
@@ -39,4 +39,6 @@
     <string name="solved_set_label">Solved Set</string>
     <string name="question_set_point">Each question point</string>
     <string name="question_set_score_label">Your score</string>
+    <string name="queestionSet_point">q_point</string>
+    <string name="questionSet_key">question_key</string>
 </resources>

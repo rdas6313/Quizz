@@ -305,10 +305,12 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
 
     @Override
-    public void QuestionSetFragmentCallbacks(String key,String name) {}
+    public void QuestionSetFragmentCallbacks(String key, String name, long point) {}
 
     @Override
-    public void QuestionFrgmentCallbacks(int total_question, int right_ans) {}
+    public void QuestionFrgmentCallbacks(int total_question, int right_ans, long each_question_point, String question_key) {
+
+    }
 
     @Override
     public void ScoreBoardFragmentCallback() {}
@@ -320,4 +322,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void ActionBarElevation(boolean needToShow) {}
+
+    @Override
+    public void setBottomNavigartionBarVisibility(boolean visibility) {}
 }

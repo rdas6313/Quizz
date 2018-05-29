@@ -59,8 +59,10 @@ public class QuestionSetFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         fragmentCallbacks = (FragmentCallbacks) getContext();
-        if(fragmentCallbacks != null)
+        if(fragmentCallbacks != null) {
+            fragmentCallbacks.setBottomNavigartionBarVisibility(true);
             fragmentCallbacks.ActionBarElevation(true);
+        }
         questionPresenterConnection = new QuestionPresenter();
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -165,7 +167,7 @@ public class QuestionSetFragment extends Fragment {
             if(questiontype == null)
                 return;
             if(!questiontype.isAlreadSelected()){
-                fragmentCallbacks.QuestionSetFragmentCallbacks(questiontype.getId(),questiontype.getQuestionType());
+                fragmentCallbacks.QuestionSetFragmentCallbacks(questiontype.getId(),questiontype.getQuestionType(),questiontype.getPoint());
             }
 
         }

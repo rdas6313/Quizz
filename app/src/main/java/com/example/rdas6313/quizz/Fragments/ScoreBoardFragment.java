@@ -10,22 +10,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
+import com.example.rdas6313.quizz.Interfaces.QuestionPresenterConnection;
+import com.example.rdas6313.quizz.Interfaces.QuestionPresenterResponse;
+import com.example.rdas6313.quizz.Presenters.QuestionPresenter;
 import com.example.rdas6313.quizz.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ScoreBoardFragment extends Fragment implements View.OnClickListener{
+public class ScoreBoardFragment extends Fragment implements View.OnClickListener,QuestionPresenterResponse{
 
     private int total_question = 0;
     private int right_ans = 0;
+    private long each_qeustion_point = 0;
+    private String question_key;
 
-    private TextView totalquestionView,rightAnsView;
+    private TextView totalquestionView,rightAnsView,scoreView;
     private Button okBtn;
 
     private FragmentCallbacks fragmentCallbacks;
+
+    private QuestionPresenterConnection questionConnection;
 
     public ScoreBoardFragment() {
         // Required empty public constructor
@@ -40,6 +48,7 @@ public class ScoreBoardFragment extends Fragment implements View.OnClickListener
         totalquestionView = (TextView)root.findViewById(R.id.total_score);
         rightAnsView = (TextView)root.findViewById(R.id.right_ans);
         okBtn = (Button)root.findViewById(R.id.okBtn);
+        scoreView = (TextView)root.findViewById(R.id.score);
         okBtn.setOnClickListener(this);
         return root;
     }
@@ -51,10 +60,18 @@ public class ScoreBoardFragment extends Fragment implements View.OnClickListener
         if(bundle != null){
             total_question = bundle.getInt(getString(R.string.total_question));
             right_ans = bundle.getInt(getString(R.string.right_ans));
+            each_qeustion_point = bundle.getLong(getString(R.string.question_set_point));
+            question_key = bundle.getString(getString(R.string.questionSet_key));
         }
-        totalquestionView.setText(getString(R.string.set_total_question,total_question));
-        rightAnsView.setText(getString(R.string.set_right_ans,right_ans));
+        totalquestionView.setText(total_question+"");
+        rightAnsView.setText(right_ans+"");
+        long score = right_ans*each_qeustion_point;
+        scoreView.setText(score+"");
         fragmentCallbacks = (FragmentCallbacks)getActivity();
+        questionConnection = new QuestionPresenter();
+        if(questionConnection != null){
+            questionConnection.addCurrentUserToQuestionSet(question_key,this,right_ans);
+        }
     }
 
     private void openQuestionSet(){
@@ -70,4 +87,13 @@ public class ScoreBoardFragment extends Fragment implements View.OnClickListener
                 break;
         }
     }
+
+    @Override
+    public void onAddUserToQuestionSetResponse(boolean isSuccessfull) {
+        if(!isSuccessfull)
+            Toast.makeText(getContext(),"Unable to update your score",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onGettingUserScoreinfo(long totalQuestionSet, long attemptSet, long Score) {}
 }

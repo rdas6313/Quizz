@@ -11,6 +11,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 public interface QuestionPresenterConnection {
     public FirebaseRecyclerOptions<Questiontype>getDataForQuestionSet();
     public FirebaseRecyclerOptions<Questions>getDataForQuestions(String key);
+    public void addCurrentUserToQuestionSet(String questionSet_Key,QuestionPresenterResponse presenterResponse,long score);
     public void addCurrentUserToQuestionSet(String questionSet_Key,QuestionPresenterResponse presenterResponse);
     public void getUserScoreInfo(QuestionPresenterResponse response);
 }
