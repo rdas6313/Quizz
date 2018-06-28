@@ -11,4 +11,5 @@ public interface FragmentCallbacks {
     public void CustomDialogFragmentCallback(String msg);
     public void ActionBarElevation(boolean needToShow);
     public void setBottomNavigartionBarVisibility(boolean visibility);
+    public void clearBackStack();
 }

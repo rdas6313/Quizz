@@ -8,6 +8,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
+        android:background="@color/light_gray"
         android:visibility="gone"
         android:id="@+id/quizzContainer"
         android:orientation="vertical"

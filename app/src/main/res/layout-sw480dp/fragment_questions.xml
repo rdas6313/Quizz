@@ -8,6 +8,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
+        android:background="@color/light_gray"
         android:visibility="gone"
         android:id="@+id/quizzContainer"
         android:orientation="vertical"
@@ -66,8 +67,8 @@
         android:layout_centerVertical="true"
         android:visibility="visible"
         android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_gravity="center"
         style="@style/Base.Widget.AppCompat.ProgressBar"/>
 

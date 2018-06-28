@@ -1,15 +1,28 @@
 package com.example.rdas6313.quizz;
 
+import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.transition.Slide;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.transition.TransitionSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.Toast;
 
 import com.example.rdas6313.quizz.Fragments.DashboardFragment;
 import com.example.rdas6313.quizz.Fragments.QuestionSetFragment;
@@ -29,11 +42,13 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
    // private ScoreBoardFragment scoreBoardFragment;
     private final String SCORE_BOARD_FRAGMENT = "score_board_fragment";
 
+    private DashboardFragment dashboardFragment;
     private BottomNavigationView navigationView;
     private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         actionBar = getSupportActionBar();
@@ -43,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
         navigationView = (BottomNavigationView)findViewById(R.id.bottom_navigation);
         navigationView.setOnNavigationItemSelectedListener(this);
         start_home();
+        setUpwindowTransition();
+
     }
 
 
@@ -55,12 +72,18 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
             startActivity(intent);
             finish();
         }
-
     }
 
     private void editProfile(){
         Intent intent = new Intent(this, EditProfileActivity.class);
-        startActivity(intent);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            View sharedView = dashboardFragment.getProfileView();
+            String sharedTransitionName = getString(R.string.ProfilePicsharedTransitionKey);
+            Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this,sharedView,sharedTransitionName).toBundle();
+//            Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+            startActivityFromFragment(dashboardFragment,intent,111,bundle);
+        }else
+            startActivity(intent);
     }
 
     @Override
@@ -96,6 +119,10 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
         finish();
     }
 
+    @Override
+    public void clearBackStack() {
+        getSupportFragmentManager().popBackStackImmediate("QuestionSet",FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
 
     @Override
     public void QuestionSetFragmentCallbacks(String key,String name,long point) {
@@ -108,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
         QuestionsFragment questionsFragment = new QuestionsFragment();
         questionsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,questionsFragment,QUESTION_FRAGMENT)
-                .addToBackStack(null)
                 .commit();
     }
 
@@ -127,7 +153,8 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
     }
 
     private void start_home(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new DashboardFragment())
+        dashboardFragment = new DashboardFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,dashboardFragment)
                 .commit();
     }
 
@@ -182,4 +209,18 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
         }
         return false;
     }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setUpwindowTransition(){
+
+       /* Fade fade = new Fade();
+        fade.setDuration(1000);
+        getWindow().setExitTransition(fade);*/
+
+        Transition transition = TransitionInflater.from(this).inflateTransition(R.transition.activity_exit_transition);
+        getWindow().setReenterTransition(transition);
+
+    }
+
+
 }

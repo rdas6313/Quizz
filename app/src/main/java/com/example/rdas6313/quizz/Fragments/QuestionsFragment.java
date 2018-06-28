@@ -7,6 +7,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -219,6 +220,7 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
     }
 
     private void startQuizz(){
+
         alreadyStartedQuizz = true;
 
         if(questionPresenterConnection != null && questionSetKey != null)
@@ -314,6 +316,8 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuItem item = menu.findItem(R.id.logout);
+        item.setVisible(false);
+        item = menu.findItem(R.id.editProfile);
         item.setVisible(false);
     }
 

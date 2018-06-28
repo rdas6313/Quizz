@@ -1,14 +1,17 @@
 package com.example.rdas6313.quizz;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NavUtils;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.ActionBar;
@@ -19,6 +22,12 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.transition.TransitionManager;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +40,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rdas6313.quizz.Fragments.CustomDialogFragment;
 import com.example.rdas6313.quizz.Interfaces.FragmentCallbacks;
@@ -63,6 +73,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile);
         ActionBar actionBar = getSupportActionBar();
@@ -100,6 +111,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         dialog.setCanceledOnTouchOutside(false);
         dialogTextView = (TextView)dialog.findViewById(R.id.progressText);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        setUpWindowTransition();
     }
 
     private void showDialog(){
@@ -133,6 +145,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                     Uri uri = data.getData();
                     if(loginConnection != null) {
                       //  showDialog();
+                        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)
+                            TransitionManager.beginDelayedTransition(coordinatorLayout);
                         progressBar.setVisibility(View.VISIBLE);
                         loginConnection.changeProfilePic(uri.toString(), this);
                     }
@@ -244,6 +258,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onChageProfilePicResponse(boolean isError, String msg, String download_link) {
        // hideDialog();
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)
+            TransitionManager.beginDelayedTransition(coordinatorLayout);
         progressBar.setVisibility(View.GONE);
         if(!isError){
             //success
@@ -325,4 +341,30 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void setBottomNavigartionBarVisibility(boolean visibility) {}
+
+    @Override
+    public void clearBackStack() {}
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setUpWindowTransition() {
+
+        Transition transition = (Transition)TransitionInflater.from(this).inflateTransition(R.transition.activity_enter_transition);
+        getWindow().setEnterTransition(transition);
+
+     /*   Fade fade = new Fade();
+        fade.setDuration(1000);
+        getWindow().setReturnTransition(fade);*/
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            finishAfterTransition();
+            return true;
+        }
+        return super.onSupportNavigateUp();
+    }
 }
+
+

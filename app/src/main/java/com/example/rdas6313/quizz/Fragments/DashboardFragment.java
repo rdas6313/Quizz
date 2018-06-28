@@ -51,6 +51,10 @@ public class DashboardFragment extends Fragment implements QuestionPresenterResp
         return root;
     }
 
+    public View getProfileView(){
+        return profilePicView;
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

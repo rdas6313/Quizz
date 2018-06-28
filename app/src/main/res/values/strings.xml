@@ -41,4 +41,5 @@
     <string name="question_set_score_label">Your score</string>
     <string name="queestionSet_point">q_point</string>
     <string name="questionSet_key">question_key</string>
+    <string name="ProfilePicsharedTransitionKey">profilePicTransitionKey</string>
 </resources>

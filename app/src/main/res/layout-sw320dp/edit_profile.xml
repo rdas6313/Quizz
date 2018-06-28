@@ -13,7 +13,7 @@
         <View
             android:id="@+id/view"
             android:layout_width="0dp"
-            android:layout_height="112dp"
+            android:layout_height="0dp"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:layout_marginTop="0dp"
@@ -21,7 +21,9 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline" />
         <ProgressBar
             android:visibility="gone"
             android:layout_width="0dp"
@@ -39,6 +41,7 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePic"
+            android:transitionName="@string/ProfilePicsharedTransitionKey"
             android:layout_width="144dp"
             android:layout_height="144dp"
             android:layout_marginBottom="0dp"
@@ -83,82 +86,95 @@
             app:layout_constraintTop_toBottomOf="@+id/progressBar"
             app:layout_constraintHorizontal_bias="0.0"
             android:id="@+id/cardView2">
+
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <TextView
-                    android:textColor="@color/gray"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/name"
                     android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/name"
+                    android:textColor="@color/gray"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="16dp" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <EditText
-                    android:textSize="20sp"
-                    android:lines="1"
-                    android:textColor="@android:color/black"
-                    android:paddingRight="16dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:text="Random Person"
                     android:id="@+id/name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="0dp"
-                    app:layout_constraintLeft_toLeftOf="@+id/textView11"
                     android:layout_marginTop="4dp"
-                    app:layout_constraintTop_toBottomOf="@+id/textView11" />
-                <ImageButton
-                    android:padding="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_mode_edit_black_24dp"
                     android:background="@android:color/transparent"
+                    android:lines="1"
+                    android:paddingRight="16dp"
+                    android:text="Random Person"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintLeft_toLeftOf="@+id/textView11"
+                    app:layout_constraintTop_toBottomOf="@+id/textView11"
+                    app:layout_constraintRight_toLeftOf="@+id/nameIcon"
+                    android:layout_marginRight="16dp" />
+
+                <ImageButton
                     android:id="@+id/nameIcon"
-                    app:layout_constraintBottom_toBottomOf="@+id/name"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintTop_toTopOf="@+id/name"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginRight="16dp"
-                    app:layout_constraintRight_toRightOf="parent" />
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@android:color/transparent"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_mode_edit_black_24dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/name"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/name" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="16dp"
                     android:text="@string/emailHint"
                     android:textColor="@color/gray"
                     android:textSize="16sp"
-                    android:id="@+id/textView10"
-                    android:layout_marginLeft="0dp"
                     app:layout_constraintLeft_toLeftOf="@+id/name"
-                    android:layout_marginTop="16dp"
                     app:layout_constraintTop_toBottomOf="@+id/name" />
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/email"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="abc@xyz.co"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="4dp"
+                    android:text="santanubhandary0404@gmail.com"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
-                    android:layout_marginLeft="0dp"
                     app:layout_constraintLeft_toLeftOf="@+id/textView10"
-                    android:layout_marginTop="4dp"
+                    app:layout_constraintRight_toLeftOf="@+id/verifiedEmail"
                     app:layout_constraintTop_toBottomOf="@+id/textView10"
-                    android:id="@+id/email"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginBottom="16dp" />
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintVertical_bias="0.0" />
+
                 <ImageView
-                    android:visibility="gone"
                     android:id="@+id/verifiedEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_done_green_a700_24dp"
-                    app:layout_constraintTop_toTopOf="@+id/email"
-                    android:layout_marginTop="0dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/email"
                     android:layout_marginBottom="0dp"
                     android:layout_marginRight="24dp"
-                    app:layout_constraintRight_toRightOf="parent" />
+                    android:layout_marginTop="0dp"
+                    android:src="@drawable/ic_done_green_a700_24dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/email"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/email" />
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -207,11 +223,11 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView13"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginRight="0dp"
-                    app:layout_constraintRight_toRightOf="@+id/textView13"
+                    android:layout_marginRight="16dp"
                     app:layout_constraintHorizontal_bias="0.0"
                     android:id="@+id/textView14"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintRight_toLeftOf="@+id/imageView2" />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -221,8 +237,16 @@
                     app:layout_constraintTop_toTopOf="@+id/textView13"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="8dp"
-                    app:layout_constraintRight_toRightOf="parent" />
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:id="@+id/imageView2" />
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/guideline"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.25" />
     </android.support.constraint.ConstraintLayout>
 </android.support.design.widget.CoordinatorLayout>

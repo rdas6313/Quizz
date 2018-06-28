@@ -1,9 +1,16 @@
 package com.example.rdas6313.quizz;
 
+import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.transition.Fade;
+import android.support.transition.Slide;
+import android.support.transition.Transition;
+import android.support.transition.TransitionInflater;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -49,6 +56,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dialog.setContentView(R.layout.login_sign_up_dialog);
         TextView textView = (TextView)dialog.findViewById(R.id.dialogText);
         textView.setText(R.string.login_dialog_text);
+
     }
 
     @Override
@@ -136,6 +144,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this,MainActivity.class);
             startActivity(intent);
+
             finish();
         }
     }
@@ -157,4 +166,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onSignUpResponse(boolean isError, String msg) {}
+
 }

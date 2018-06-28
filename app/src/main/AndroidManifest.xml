@@ -16,8 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"/>
+            android:screenOrientation="portrait" android:launchMode="singleTop"/>
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"

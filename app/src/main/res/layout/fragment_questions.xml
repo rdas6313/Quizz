@@ -11,6 +11,7 @@
         android:visibility="gone"
         android:id="@+id/quizzContainer"
         android:orientation="vertical"
+        android:background="@color/light_gray"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
