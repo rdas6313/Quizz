@@ -135,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
             getSupportActionBar().setTitle(name);
         QuestionsFragment questionsFragment = new QuestionsFragment();
         questionsFragment.setArguments(bundle);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            questionsFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_enter_transition));
+            questionsFragment.setExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_exit_transition));
+        }
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,questionsFragment,QUESTION_FRAGMENT)
                 .commit();
     }
@@ -143,6 +147,10 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
     public void ScoreBoardFragmentCallback() {
         getSupportActionBar().setTitle("Question sets");
         QuestionSetFragment questionSetFragment = new QuestionSetFragment();
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            questionSetFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_enter_transition));
+            questionSetFragment.setExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_exit_transition));
+        }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container,questionSetFragment,QUESTION_SET_FRAGMENT)
                 .commit();
@@ -202,6 +210,10 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
         bundle.putString(getString(R.string.questionSet_key),q_key);
         bundle.putLong(getString(R.string.question_set_point),each_question_point);
         ScoreBoardFragment scoreBoardFragment = new ScoreBoardFragment();
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            scoreBoardFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_enter_transition));
+            scoreBoardFragment.setExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_exit_transition));
+        }
         scoreBoardFragment.setArguments(bundle);
        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,scoreBoardFragment,SCORE_BOARD_FRAGMENT)
                .commit();

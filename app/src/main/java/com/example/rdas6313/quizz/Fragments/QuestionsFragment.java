@@ -1,6 +1,7 @@
 package com.example.rdas6313.quizz.Fragments;
 
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +73,7 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
     private boolean alreadyStartedQuizz = false;
     private int rightAns;
     private long each_question_point;
+    private RelativeLayout rootContainer;
 
     public QuestionsFragment() {}
 
@@ -82,6 +86,7 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_questions, container, false);
+        rootContainer = (RelativeLayout) root.findViewById(R.id.QuestionContainer);
         recyclerView = (RecyclerView)root.findViewById(R.id.recylerView);
         progressBar = (ProgressBar)root.findViewById(R.id.progressBar);
         timerView = (TextView)root.findViewById(R.id.timerView);
@@ -157,6 +162,9 @@ public class QuestionsFragment extends Fragment implements View.OnClickListener,
     }
 
     private void changeView(int view_type){
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            TransitionManager.beginDelayedTransition(rootContainer);
+        }
         switch (view_type){
             case 1:
                 progressBar.setVisibility(View.GONE);
