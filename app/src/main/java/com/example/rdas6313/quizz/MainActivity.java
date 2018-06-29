@@ -76,12 +76,13 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
 
     private void editProfile(){
         Intent intent = new Intent(this, EditProfileActivity.class);
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){/*
             View sharedView = dashboardFragment.getProfileView();
             String sharedTransitionName = getString(R.string.ProfilePicsharedTransitionKey);
-            Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this,sharedView,sharedTransitionName).toBundle();
-//            Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
-            startActivityFromFragment(dashboardFragment,intent,111,bundle);
+            Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this,sharedView,sharedTransitionName).toBundle();*/
+            Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+            //startActivityFromFragment(dashboardFragment,intent,111,bundle);
+            startActivity(intent,bundle);
         }else
             startActivity(intent);
     }
@@ -148,12 +149,21 @@ public class MainActivity extends AppCompatActivity implements FragmentCallbacks
     }
 
     private void start_questionSet(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new QuestionSetFragment())
+        QuestionSetFragment questionSet = new QuestionSetFragment();
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            questionSet.setEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_exit_transition));
+            questionSet.setExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_exit_transition));
+        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,questionSet)
                 .commit();
     }
 
     private void start_home(){
         dashboardFragment = new DashboardFragment();
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+            dashboardFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_exit_transition));
+            dashboardFragment.setExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_exit_transition));
+        }
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,dashboardFragment)
                 .commit();
     }
