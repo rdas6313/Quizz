@@ -1,5 +1,14 @@
 # Quizz
 it's a simple Quizz App for android
+### Used Technology
+* java
+* xml
+* Firebase database
+* Firebase auth
+* Firebase storage
+* Material design
+* Animation
+
 ### How to use
 clone this repo or download the zip file then open it in android studio.From there you can have the apk.
 ### Preview Screenshots
